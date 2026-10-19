@@ -24,8 +24,8 @@ export interface SiteConfig {
   /** Social preview image (1200×630), public path. */
   ogImage?: string;
   /**
-   * Hosting state used by the wording on /privacy. Keep `null` until the site is actually live on Cloudflare Pages,
-   * then set to "cloudflare-pages" in the same commit that is deployed.
+   * Hosting state used by the wording on /privacy. "cloudflare-pages" now that the site is live
+   * at web-portfolio-9ar.pages.dev; use `null` only for a copy that is not deployed there.
    */
   hostedOn: "cloudflare-pages" | null;
 }
@@ -46,7 +46,7 @@ export const site: SiteConfig = {
   linkedin: "https://www.linkedin.com/in/albert-gracia-i-riera-05074b1ab/",
   cvUrl: undefined,
   ogImage: undefined,
-  hostedOn: null,
+  hostedOn: "cloudflare-pages", // live at https://web-portfolio-9ar.pages.dev (confirmed by Albert, 19 Oct 2026)
 };
 
 /** Development notes (pending content, missing assets) are visible outside production. */

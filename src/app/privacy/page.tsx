@@ -22,9 +22,6 @@ const ext = (href: string, label: string) => (
   </a>
 );
 
-/** Wording follows the real deployment state: see `site.hostedOn` in src/content/site.ts. */
-const live = site.hostedOn === "cloudflare-pages";
-
 const sections: LegalSection[] = [
   {
     id: "responsible",
@@ -59,26 +56,29 @@ const sections: LegalSection[] = [
     body: (
       <>
         <p>
-          {live
-            ? "This site is hosted on Cloudflare Pages, a service of Cloudflare, Inc. (United States). "
-            : "This site is being prepared for hosting on Cloudflare Pages, a service of Cloudflare, Inc. (United States); what follows applies once it is published there. "}
+          This site is hosted on Cloudflare Pages, a service of Cloudflare, Inc. (United States), at web-portfolio-9ar.pages.dev. I
+          am based in Switzerland, but the hosting is not limited to Switzerland: Cloudflare serves the site from its global network.{" "}
           When you open a page, your browser sends a request to Cloudflare&rsquo;s network. To deliver the page and protect the service from
           abuse, Cloudflare processes technical data such as your IP address, the requested address, the date and time, and browser and
           device information. I do not use this data to identify visitors or to build profiles.
         </p>
         <p>
-          <strong>Roles.</strong> In its privacy policy, Cloudflare describes itself as a processor for its customers&rsquo; content and
-          customer logs, acting on the customer&rsquo;s instructions, and as a controller for the personal information it collects for
-          its own purposes, such as operating and securing its network. For delivering this site it therefore acts as my service provider
-          and, for its own network-security purposes, in its own right.
+          <strong>Roles.</strong> In its privacy policy, Cloudflare states that it is a controller of the personal information it
+          collects, with exceptions: it acts as a processor, on its customer&rsquo;s instructions, for customer logs (the visitor data it
+          makes available to the site owner), for the content that passes through its network, and for some account information. For
+          delivering this site it therefore acts as my processor for that data and, for operating and securing its own network, as a
+          controller in its own right.
         </p>
         <p>
-          <strong>Countries and safeguards.</strong> Cloudflare operates a global network of data centres, so processing can take place in
-          various countries, including outside Switzerland and Europe; Cloudflare, Inc. is based in the United States. For transfers to the
-          United States, Cloudflare states that it is certified under the Swiss-U.S. Data Privacy Framework and that, if that
-          certification lapses or is invalidated, it relies on the European Commission&rsquo;s Standard Contractual Clauses. Its customer
-          data processing addendum provides for those clauses with Swiss modifications and, according to Cloudflare, is incorporated into
-          its self-serve terms. These are Cloudflare&rsquo;s own statements, read on 19 October 2026; I have not audited them.
+          <strong>Countries and safeguards.</strong> Cloudflare says that most traffic is handled on edge servers in more than 330
+          cities worldwide and that metadata and log data are processed in data centres in the United States and Europe. Your request
+          can therefore be processed in various countries, including outside Switzerland and Europe; I do not choose or restrict the
+          location. Cloudflare, Inc. is based in the United States. For transfers to the United States, Cloudflare states that it is
+          certified under the EU-U.S., UK Extension and Swiss-U.S. Data Privacy Frameworks and that, if a certification lapses or is
+          invalidated, it relies on the European Commission&rsquo;s Standard Contractual Clauses. Its customer data processing addendum
+          provides for those clauses with Swiss modifications (clause 6.2(c)) and, according to Cloudflare, is incorporated into its
+          self-serve terms. These are Cloudflare&rsquo;s own statements, read on 19 October 2026 (privacy policy effective 4 November
+          2025; data processing addendum version 6.4); I have not audited them.
         </p>
         <p>
           <strong>Retention.</strong> Cloudflare does not publish one retention period for the request data it processes when delivering
