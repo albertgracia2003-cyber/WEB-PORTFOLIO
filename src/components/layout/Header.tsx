@@ -47,9 +47,17 @@ export function Header() {
       }
       const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4;
       let active: string | null = null;
+      let best = -Infinity;
       for (const item of primaryNav) {
-        const el = document.getElementById(item.id);
-        if (el && el.getBoundingClientRect().top <= 140) active = item.id;
+        for (const sid of [item.id, ...(item.alsoIds ?? [])]) {
+          const el = document.getElementById(sid);
+          if (!el) continue;
+          const top = el.getBoundingClientRect().top;
+          if (top <= 140 && top > best) {
+            best = top;
+            active = item.id;
+          }
+        }
       }
       if (atBottom) active = primaryNav[primaryNav.length - 1]?.id ?? active;
       setCurrent(active);

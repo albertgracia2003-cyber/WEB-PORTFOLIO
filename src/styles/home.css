@@ -1137,28 +1137,6 @@
   align-content: start;
 }
 
-/* Bar stool: editorial photograph, large title, CAD sketch inset */
-.mx--chair {
-  display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  column-gap: var(--col-gap);
-  row-gap: var(--s-6);
-  align-items: end;
-}
-
-.mchair__photo {
-  grid-column: 1 / span 6;
-  display: block;
-}
-
-.mchair__body {
-  grid-column: 8 / span 5;
-  display: grid;
-  gap: var(--s-4);
-  justify-items: start;
-  padding-bottom: var(--s-4);
-}
-
 .mchair__sketch {
   margin: 0;
   width: min(100%, 18rem);
@@ -1201,8 +1179,6 @@
   }
   .moto__logo,
   .moto__body,
-  .mchair__photo,
-  .mchair__body,
   .aed__media,
   .aed__body {
     grid-column: 1 / -1;
@@ -1211,8 +1187,60 @@
   .aed__media {
     max-width: 22rem;
   }
-  .mchair__photo {
-    max-width: 30rem;
+}
+
+/* Bar stool: standalone closing project after Computational Design */
+.chair-home__kicker {
+  margin-bottom: var(--s-8);
+}
+
+.chair-home__grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--col-gap);
+  row-gap: var(--s-6);
+  align-items: center;
+}
+
+.chair-home__photo {
+  grid-column: 1 / span 5;
+  display: block;
+}
+
+.chair-home__body {
+  grid-column: 7 / span 5;
+  display: grid;
+  gap: var(--s-4);
+  justify-items: start;
+}
+
+.chair-home__title {
+  font-size: var(--fs-h2, var(--fs-h3));
+  line-height: 1.02;
+  letter-spacing: -0.045em;
+  font-weight: var(--fw-semibold);
+  text-wrap: balance;
+}
+
+@media (max-width: 1099px) {
+  .chair-home__photo {
+    grid-column: 1 / span 6;
+  }
+  .chair-home__body {
+    grid-column: 8 / span 5;
+  }
+}
+
+@media (max-width: 899px) {
+  .chair-home__photo,
+  .chair-home__body {
+    grid-column: 1 / -1;
+  }
+  .chair-home__photo {
+    max-width: 36rem;
+  }
+  .chair-home__kicker {
+    margin-bottom: var(--s-6);
   }
 }
 

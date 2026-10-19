@@ -6,12 +6,14 @@ export interface NavItem {
   id: string;
   /** Path prefixes that mark this item as current when the visitor is on a detail page. */
   match: readonly string[];
+  /** Further homepage sections that belong to this item (highlighted with it while scrolling). */
+  alsoIds?: readonly string[];
 }
 
 /** One list, used by the header, mobile menu, footer and hero index. The homepage is the project overview. */
 export const primaryNav: readonly NavItem[] = [
   { label: "ORTESIS STUDIO", href: "/#work", id: "work", match: ["/work/ortesis-studio"] },
-  { label: "Mechanical & Product Design", href: "/#physical", id: "physical", match: ["/work/chair-design"] },
+  { label: "Mechanical & Product Design", href: "/#physical", id: "physical", match: ["/work/chair-design"], alsoIds: ["chair"] },
   { label: "Computational Design", href: "/#computational", id: "computational", match: ["/computational-design"] },
   { label: "About", href: "/#about", id: "about", match: ["/about"] },
   { label: "Contact", href: "/#contact", id: "contact", match: ["/contact"] },

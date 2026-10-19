@@ -196,8 +196,8 @@ export function getProject(slug: string): Project {
   return p;
 }
 
-/** Case-study reading order for "next project": homepage order (01 ORTESIS, 02 Mechanical, 03 Computational), detail pages only. */
-export const caseStudyOrder = ["ortesis-studio", "chair-design", "procedural-city", "parametric-drawer"] as const;
+/** Case-study reading order for "next project": homepage order (01 ORTESIS, 03 Computational, then the Bar Stool that closes the page before About), detail pages only. */
+export const caseStudyOrder = ["ortesis-studio", "procedural-city", "parametric-drawer", "chair-design"] as const;
 
 export function nextCaseStudy(slug: string): Project {
   const i = caseStudyOrder.indexOf(slug as (typeof caseStudyOrder)[number]);

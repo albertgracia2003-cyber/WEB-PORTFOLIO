@@ -2,6 +2,7 @@ import { Hero } from "@/components/home/Hero";
 import { FlagshipOrtesis } from "@/components/home/FlagshipOrtesis";
 import { ComputationalSection } from "@/components/home/ComputationalSection";
 import { PhysicalSection } from "@/components/home/PhysicalSection";
+import { ChairSection } from "@/components/home/ChairSection";
 import { AboutSection } from "@/components/home/AboutSection";
 import { ContactSection } from "@/components/home/ContactSection";
 import { site } from "@/content/site";
@@ -27,6 +28,7 @@ export default function HomePage() {
       <FlagshipOrtesis />
       <PhysicalSection />
       <ComputationalSection />
+      <ChairSection />
       <AboutSection />
       <ContactSection />
     </>
