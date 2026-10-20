@@ -22,7 +22,7 @@ export interface SiteConfig {
   /** Public path to the CV, e.g. "/assets/documents/albert-gracia-cv.pdf". */
   cvUrl?: string;
   /** Social preview image (1200×630), public path. */
-  ogImage?: string;
+  ogImage: "/portfolio-home-hero-dark-2880x1800.png";
   /**
    * Hosting state used by the wording on /privacy. "cloudflare-pages" now that the site is live
    * at web-portfolio-9ar.pages.dev; use `null` only for a copy that is not deployed there.
