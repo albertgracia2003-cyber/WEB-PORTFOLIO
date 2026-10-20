@@ -45,7 +45,7 @@ export const site: SiteConfig = {
   email: "albertgracia2003@gmail.com",
   linkedin: "https://www.linkedin.com/in/albert-gracia-i-riera-05074b1ab/",
   cvUrl: undefined,
-  ogImage: "/portfolio-home-hero-dark-2880x1800.png",
+  ogImage: "https://albertgracia-portfolio.com/portfolio-home-hero-dark-2880x1800.png",
   hostedOn: "cloudflare-pages", // live at https://web-portfolio-9ar.pages.dev (confirmed by Albert, 19 Oct 2026)
 };
 
