@@ -22,7 +22,7 @@ export interface SiteConfig {
   /** Public path to the CV, e.g. "/assets/documents/albert-gracia-cv.pdf". */
   cvUrl?: string;
   /** Social preview image (1200×630), public path. */
-  ogImage: "/portfolio-home-hero-dark-2880x1800.png";
+  ogImage?: string;
   /**
    * Hosting state used by the wording on /privacy. "cloudflare-pages" now that the site is live
    * at web-portfolio-9ar.pages.dev; use `null` only for a copy that is not deployed there.
@@ -45,7 +45,7 @@ export const site: SiteConfig = {
   email: "albertgracia2003@gmail.com",
   linkedin: "https://www.linkedin.com/in/albert-gracia-i-riera-05074b1ab/",
   cvUrl: undefined,
-  ogImage: undefined,
+  ogImage: "/portfolio-home-hero-dark-2880x1800.png",
   hostedOn: "cloudflare-pages", // live at https://web-portfolio-9ar.pages.dev (confirmed by Albert, 19 Oct 2026)
 };
 
