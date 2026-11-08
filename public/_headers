@@ -1,0 +1,13 @@
+# Cloudflare Pages response headers (static responses only).
+# Pages already adds X-Content-Type-Options: nosniff and Referrer-Policy: strict-origin-when-cross-origin.
+
+/*
+  X-Frame-Options: DENY
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()
+  # Report-only until verified on a Pages preview: open the browser console on every page and the 3D viewers;
+  # if no "Content-Security-Policy-Report-Only" violations appear, rename this header to Content-Security-Policy.
+  Content-Security-Policy-Report-Only: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self'; font-src 'self'; connect-src 'self'; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'
+
+# Hashed build files never change under the same name.
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable
