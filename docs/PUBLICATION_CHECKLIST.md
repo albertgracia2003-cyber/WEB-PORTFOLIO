@@ -65,6 +65,6 @@ From the project folder:
 - Cloudflare account state (section B).
 - Items listed under "Exact questions" in the final reply and in `docs/CONTENT_NOTES.md`.
 
-**At go-live (same commit as the deployment):** set `hostedOn: "cloudflare-pages"` in `src/content/site.ts` so `/privacy` says "hosted on Cloudflare Pages" instead of "being prepared for hosting"; set `NEXT_PUBLIC_SITE_URL`; re-read the Cloudflare documents linked on `/privacy` and update the date.
+**At go-live (same commit as the deployment):** `hostedOn` is now set to `"cloudflare-pages"` (done 19 Oct 2026); still to do: set `NEXT_PUBLIC_SITE_URL`; re-read the Cloudflare documents linked on `/privacy` and update the date.
 
 **Whether the actual production export has passed:** No. It has not been run. Run section A on your PC.

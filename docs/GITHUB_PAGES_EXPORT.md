@@ -41,5 +41,5 @@ Repository → Settings → Pages → Build and deployment → Source: **Deploy 
 - GitHub Pages ignores `_headers`: no CSP, X-Frame-Options or Permissions-Policy there. Fine for a test.
 - Unknown URLs show `404.html` (served by Pages from the site root only; with a project site it is used for URLs under the repo path).
 - For a custom domain or a `<user>.github.io` repository, build without `NEXT_PUBLIC_BASE_PATH`.
-- `/privacy` currently says the site "is being prepared for hosting on Cloudflare Pages"; that is accurate only for the Cloudflare deployment. Treat a GitHub Pages test as a test, not the published site.
+- `/privacy` now says the site is hosted on Cloudflare Pages at web-portfolio-9ar.pages.dev; that is accurate only for the Cloudflare deployment. Treat a GitHub Pages test as a test, not the published site.
 - Leave `NEXT_PUBLIC_SITE_URL` unset for the test (no canonical URLs, empty sitemap). Set it for the real launch.

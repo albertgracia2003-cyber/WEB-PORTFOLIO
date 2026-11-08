@@ -6,7 +6,7 @@ src/
     layout.tsx                      Fonts (Geist via next/font), metadata, JS flag, SiteShell
     page.tsx                        Homepage: Hero → ORTESIS → Computational → Physical → About → Contact
     globals.css                     Imports styles/*
-    work/ortesis-studio/            Flagship case study (7 chapters, process sequence, compare, breakdown)
+    work/ortesis-studio/            Flagship case study (a continuous story: overview, how the machine moves, how it was built [CAD model beside the built prototype], scan file to printed part; then Technical details)
     work/chair-design/              Editorial warm-tone page + lightbox gallery + supporting projects
     computational-design/           Collection index (rendered from projects.ts)
       procedural-city/              Case study with scroll-driven schematic sequence
@@ -17,14 +17,14 @@ src/
   components/
     layout/      SiteShell, Header (compact on scroll, accessible mobile menu), ThemeToggle, Footer
     home/        Homepage sections
-    projects/    CaseStudy (CaseHero, Chapter, Split, Disclosure, NextProject), ChapterNav,
+    projects/    CaseStudy (CaseHero [optional `headline`, `meta` (spec strip), `compact` = title + goal in one band], Chapter [optional `aside`; class `chapter--tight` = one-row heading], Split, Disclosure, NextProject), JumpBar (sticky section links),
                  SupportingProject, ContactLinks, AppWalkthrough (recording + chapter buttons; ORTESIS ch. 5),
                  Showcase (City/Drawer sections from showcase.ts: steps, mosaic, day/night, behind, recording),
-                 DayNight (selector between two separate recordings), Thread (ORTESIS operate/geometry/print strip),
+                 DayNight (selector between two separate recordings),
                  DrawerConfigurator (unused)
     media/       MediaFrame (single entry point for media), MediaPlaceholder (designed "studio stage"),
                  VideoMedia (ambient loops / recordings with controls, lazy sources, one video at a time),
-                 MediaZoom (image that opens at native size in a <dialog>), MediaGallery (native <dialog>
+                 AnnotatedFigure (photo/CAD with numbered or lettered pins, `dot` part labels, optional SVG overlay; ORTESIS rig), MediaZoom (image that opens at native size in a <dialog>), MediaGallery (native <dialog>
                  lightbox), ComparisonSlider (currently unused)
     motion/      RevealController (one IntersectionObserver), ScrollSequence (currently unused), PauseOffscreen
     graphics/    HeroMachine (CAD model of the scanning machine — unused since the hero became typographic),
@@ -38,6 +38,11 @@ src/
 
   content/       site.ts · profile.ts · projects.ts · media.ts · navigation.ts · ortesis-models.ts (STL paths,
                  labels, order) · hero-machine.ts (hero model file, posters, view, separation, caption)
+                 · ortesis-case.ts (facts for /work/ortesis-studio: `intro` [two sentences, the discreet role line, photo caption], `QUALIFICATION`,
+                 `moves` [the sentence beside the animation], `drives` [two close-ups: caption, 4:3 crop, part labels used under Technical details],
+                 `decisions` rotation/translation [optional `reason`/`tradeoff`/`alternative`, hidden until Albert documents them], `buildCaptions`,
+                 `rigChanges` [empty until a real assembly change is confirmed], app steps, demonstrated / not measured / `nextQuestions`,
+                 `hardwareNext` [optional], `softwareNext` [under Technical details])
   types/         project.ts · media.ts
   lib/           utils.ts · seo.ts · theme.ts (theme key + no-flash head script) · sculpture.ts (geometry + mat4)
                  · stl.ts (STL / packed-mesh parsing, vertex welding, normals) · assembly.ts (hero model decoder)
@@ -50,6 +55,7 @@ public/assets/ortesis-studio/models/ Original STL models, lossless .mesh.bin der
 public/assets/procedural-city/, parametric-drawer/  Web videos (WebM + MP4), posters, stills
 media-source/                       Original files (machine STL, raw screen recordings) — git-ignored, not served
 scripts/pack-stl-models.mjs         Writes/verifies the .mesh.bin derivatives (Node, no dependencies)
+scripts/simplify-stl.mjs            STL → reduced .mesh.bin (quadric edge collapse; used for the rig CAD model, which is NOT lossless)
 scripts/pack-assembly.mjs           Writes the hero machine's .agm.gz (bodies, copies, quantised, gzip)
 public/assets/<project>/            Optimised media (empty until assets are supplied)
 docs/                               ASSET_MANIFEST · CONTENT_NOTES · PROJECT_STRUCTURE · SKILLS_SETUP
