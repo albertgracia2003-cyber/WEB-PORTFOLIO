@@ -1,0 +1,894 @@
+/* ==========================================================================
+   ORTESIS STUDIO — case study page (/work/ortesis-studio)
+   Sixth pass (7 Nov 2026): a visual, continuous story. What the project is (the real photograph) → how the machine moves
+   (the CAD animation, or the built rig until it is supplied) → how it was built (CAD model beside the built prototype)
+   → the flow from scan file to printed part → Technical details (part names, architecture, geometry, Blender).
+   Laptop target: at 1280 × 650 every photograph is on screen together with the text that explains it.
+   ========================================================================== */
+
+.case--ortesis {
+  padding-top: var(--header-h);
+}
+
+/* Jump bar: sticky row of section links under the header. NOT used on the ORTESIS page since 8 Nov 2026 (Albert removed it); kept for a possible later use. */
+
+.jump {
+  position: sticky;
+  top: 3.6rem;
+  z-index: calc(var(--z-header) - 1);
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  backdrop-filter: blur(14px) saturate(140%);
+  border-block: 1px solid var(--line);
+}
+
+.jump__list {
+  display: flex;
+  gap: var(--s-2);
+  padding-block: var(--s-2);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.jump__list::-webkit-scrollbar {
+  display: none;
+}
+
+.jump__link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.5rem;
+  padding: 0 var(--s-4);
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-small);
+  white-space: nowrap;
+  color: var(--fg-muted);
+  transition:
+    background-color var(--dur-2) var(--ease-out),
+    color var(--dur-2) var(--ease-out);
+}
+
+.jump__link:hover {
+  color: var(--fg);
+}
+
+.jump__link.is-active {
+  color: var(--fg);
+  background: color-mix(in srgb, var(--color-accent) 16%, transparent);
+}
+
+/* Annotated photographs */
+
+.annot {
+  position: relative;
+}
+
+.annot__svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  filter: drop-shadow(0 1px 2px var(--color-shadow-strong));
+}
+
+.annot__pins {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.annot__pin {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  margin: -0.95rem 0 0 -0.95rem;
+  border-radius: 50%;
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: var(--fw-semibold);
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--color-background) 80%, transparent),
+    0 6px 14px -4px var(--color-shadow-strong);
+}
+
+.detail-block {
+  display: grid;
+  gap: var(--s-5);
+  margin-top: clamp(3rem, 6vw, 5rem);
+  scroll-margin-top: calc(3.6rem + 1.25rem - var(--header-h) - 1rem);
+}
+
+/* Short labels drawn on the photograph, beside their pins. */
+
+.annot__pin[data-label]::after {
+  content: attr(data-label);
+  position: absolute;
+  top: 50%;
+  left: calc(100% + 0.6rem);
+  transform: translateY(-50%);
+  padding: 0.25rem 0.7rem;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--color-background) 90%, transparent);
+  border: 1px solid var(--line-strong);
+  color: var(--fg);
+  font-size: 0.85rem;
+  font-weight: var(--fw-semibold);
+  white-space: nowrap;
+}
+
+.annot__pin[data-side="left"]::after {
+  left: auto;
+  right: calc(100% + 0.6rem);
+}
+
+/* Part names drawn on a detail photograph: a dot, then the name. */
+.annot__pin--dot {
+  width: 0.85rem;
+  height: 0.85rem;
+  margin: -0.425rem 0 0 -0.425rem;
+  box-shadow:
+    0 0 0 2px color-mix(in srgb, var(--color-background) 85%, transparent),
+    0 4px 10px -3px var(--color-shadow-strong);
+}
+
+.annot__pin--dot[data-label]::after {
+  left: calc(100% + 0.5rem);
+  right: auto;
+  padding: 0.18rem 0.6rem;
+  font-size: 0.8rem;
+}
+
+.annot__pin--dot[data-side="left"]::after {
+  left: auto;
+  right: calc(100% + 0.5rem);
+}
+
+/* ---------- Opening: what the project is ---------------------------- */
+
+/* The project, the machine and the printed part. Text on the left, the real photograph as large as the screen height allows. */
+.glance {
+  position: relative;
+  isolation: isolate;
+  padding-block: var(--s-5) clamp(2rem, 4vw, 3.5rem);
+  overflow: hidden;
+}
+
+.glance__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, min(64%, max(24rem, calc((100svh - 14.5rem) * 1.6))));
+  column-gap: clamp(1.5rem, 3.5vw, 3.5rem);
+  align-items: center;
+}
+
+.glance__text {
+  display: grid;
+  gap: var(--s-4);
+  align-content: center;
+  justify-items: start;
+  min-width: 0;
+}
+
+.glance__back {
+  font-size: var(--fs-small);
+  color: var(--fg-muted);
+}
+
+.glance__title {
+  font-size: clamp(2.4rem, 4.4vw, 3.9rem);
+  font-weight: var(--fw-semibold);
+  letter-spacing: -0.055em;
+  line-height: 0.95;
+  background: linear-gradient(100deg, var(--fg) 35%, var(--color-steel-text) 75%, var(--color-accent) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.glance__lead {
+  max-width: 28ch;
+  font-size: clamp(1.15rem, 1.6vw, 1.45rem);
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+}
+
+.glance__body {
+  max-width: 38ch;
+  color: var(--fg-muted);
+}
+
+/* The one discreet line about the contribution. */
+.glance__role {
+  max-width: 38ch;
+  margin-top: var(--s-2);
+  padding-top: var(--s-3);
+  border-top: 1px solid var(--line);
+  font-size: var(--fs-small);
+  line-height: 1.45;
+  color: var(--fg-muted);
+}
+
+.glance__photo {
+  margin: 0;
+  min-width: 0;
+}
+
+.glance__photo figcaption {
+  display: grid;
+  gap: 0.15rem;
+  padding-top: var(--s-2);
+  font-size: var(--fs-small);
+  color: var(--fg-muted);
+}
+
+.glance__stage {
+  position: relative;
+}
+
+/* ---------- Blocks and parts ---------------------------------------- */
+
+.block {
+  --fit-h: max(20rem, calc(100svh - 10rem));
+  padding-block: clamp(2.5rem, 5vw, 4.5rem);
+  background: var(--bg);
+}
+
+/* html already adds scroll-padding-top (header + 1rem); a part lands directly under the sticky header. */
+.part,
+.sub,
+#details {
+  scroll-margin-top: calc(3.6rem + 1.25rem - var(--header-h) - 1rem);
+}
+
+.part {
+  display: grid;
+  gap: var(--s-5);
+}
+
+.part + .part {
+  margin-top: clamp(3rem, 6vw, 5rem);
+}
+
+.part__title {
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  font-weight: var(--fw-semibold);
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+}
+
+/* Sub-sections inside a part (where it stands). */
+.sub {
+  display: grid;
+  gap: var(--s-4);
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+}
+
+.sub__title {
+  font-size: clamp(1.35rem, 2vw, 1.75rem);
+  font-weight: var(--fw-semibold);
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+/* ---------- How it moves: a close-up of the machine beside the sentence that explains it ---- */
+
+/* First row: close-up on the left; title, the sentence and the CAD animation stacked on the right (the animation takes the free space under the text). */
+.moves {
+  --media-ratio: 1.3;
+  display: grid;
+  grid-template-columns: minmax(0, min(62%, calc(var(--fit-h) * var(--media-ratio)))) minmax(0, 1fr);
+  grid-template-areas:
+    "media title"
+    "media text"
+    "media clips";
+  grid-template-rows: auto auto 1fr;
+  column-gap: clamp(1.5rem, 4vw, 4rem);
+  row-gap: var(--s-4);
+  align-items: start;
+}
+
+.moves__title {
+  grid-area: title;
+}
+
+.moves__media {
+  grid-area: media;
+  margin: 0;
+  min-width: 0;
+}
+
+.moves__text {
+  grid-area: text;
+  display: grid;
+  gap: var(--s-4);
+  align-content: start;
+  max-width: 36ch;
+}
+
+.moves__lead {
+  font-size: clamp(1.25rem, 1.9vw, 1.7rem);
+  font-weight: var(--fw-medium);
+  line-height: 1.25;
+  letter-spacing: -0.025em;
+}
+
+.moves__body {
+  color: var(--fg-muted);
+}
+
+.drive__cap,
+.moves__clip-cap {
+  padding-top: var(--s-2);
+  font-size: var(--fs-small);
+  color: var(--fg-muted);
+}
+
+/* The CAD animation (and, once supplied, the real motion test) under the text, as wide as the column; on a short screen it is scaled so it still fits. */
+.moves__clips {
+  grid-area: clips;
+  display: grid;
+  gap: var(--s-4);
+  min-width: 0;
+}
+
+.moves__clip {
+  display: grid;
+  gap: 0;
+  width: min(100%, 38rem, max(16rem, calc((var(--fit-h) - 9rem) * 1.7778)));
+  margin: 0;
+}
+
+.moves__clip .media-frame__box {
+  border-radius: var(--radius-2);
+}
+
+
+/* Albert's own words on a design decision; renders only once he has supplied them. */
+.drive__why {
+  display: grid;
+  gap: var(--s-2);
+  margin-top: var(--s-3);
+  padding-left: var(--s-4);
+  border-left: 3px solid var(--color-accent);
+  font-size: var(--fs-small);
+  line-height: 1.45;
+  color: var(--fg-muted);
+}
+
+.drive__why .label {
+  display: block;
+}
+
+/* ---------- How it was built: the interactive CAD model, as large as the screen allows ---- */
+
+/* Title and two sentences on the left; the viewer on the right, sized so the model and its controls fit the screen height. */
+.part--build {
+  display: grid;
+  grid-template-columns: minmax(14rem, 19rem) minmax(0, 1fr);
+  gap: var(--s-5) clamp(1.5rem, 4vw, 4rem);
+  align-items: start;
+}
+
+.build__side {
+  display: grid;
+  gap: var(--s-5);
+  align-content: start;
+  min-width: 0;
+}
+
+.build__text {
+  display: grid;
+  gap: var(--s-4);
+  align-content: start;
+}
+
+/* The built rig, small, under the text and to the left of the model (width follows the screen height so it never pushes the section taller than the model). */
+.build__photo {
+  margin: 0;
+  width: clamp(8.5rem, calc((var(--fit-h) - 15rem) * 0.75), 12rem);
+  max-width: 100%;
+}
+
+.build__photo figcaption {
+  padding-top: var(--s-2);
+  font-size: var(--fs-small);
+  color: var(--fg-muted);
+}
+
+/* The photograph is small: the "Enlarge" pill shrinks to its icon (the button keeps its accessible name). */
+.build__photo .zoom__hint {
+  right: var(--s-2);
+  top: var(--s-2);
+  padding: 0.35rem;
+  gap: 0;
+  font-size: 0;
+}
+
+.build__lead {
+  font-size: clamp(1.15rem, 1.5vw, 1.4rem);
+  font-weight: var(--fw-medium);
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+}
+
+.build__body {
+  color: var(--fg-muted);
+}
+
+.build__viewer {
+  width: 100%;
+  max-width: max(22rem, calc((var(--fit-h) - 0.5rem) * 1.6));
+  justify-self: end;
+}
+
+.build__viewer .oviewer__stage {
+  aspect-ratio: 16 / 10;
+  min-height: 0;
+  /* A flat mid-tone slate ground (no light pool or vignette) so the ivory model stands out in both themes. */
+  background: color-mix(in srgb, var(--color-steel-blue) 78%, var(--bg));
+  border-color: color-mix(in srgb, var(--color-steel-blue) 40%, transparent);
+}
+
+/* ---------- Technical details: the rig's parts, named ---------------- */
+
+.parts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s-6) var(--col-gap);
+}
+
+.parts__item {
+  margin: 0;
+  min-width: 0;
+}
+
+.parts__item figcaption {
+  padding-top: var(--s-2);
+  font-size: var(--fs-small);
+  color: var(--fg-muted);
+}
+
+.parts__item figcaption strong {
+  color: var(--fg);
+  font-weight: var(--fw-semibold);
+}
+
+.tools-line {
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+  padding-top: var(--s-4);
+  border-top: 1px solid var(--line);
+  font-size: var(--fs-small);
+  color: var(--fg-muted);
+}
+
+.tools-line .label {
+  margin-right: var(--s-2);
+  color: var(--fg-faint);
+}
+
+/* ---------- From scan file to printed part: the application, explained step by step ---- */
+
+.app-intro {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: var(--s-4) clamp(1.5rem, 4vw, 4rem);
+  align-items: end;
+}
+
+.app-intro__main {
+  display: grid;
+  gap: var(--s-3);
+  max-width: 54ch;
+}
+
+.app-intro__lead {
+  font-size: clamp(1.25rem, 1.9vw, 1.7rem);
+  font-weight: var(--fw-medium);
+  line-height: 1.25;
+  letter-spacing: -0.025em;
+}
+
+.app-intro__body {
+  color: var(--fg-muted);
+}
+
+.app-intro__note {
+  max-width: 40ch;
+  padding-left: var(--s-4);
+  border-left: 2px solid var(--line-strong);
+  font-size: var(--fs-small);
+  line-height: 1.5;
+  color: var(--fg-muted);
+}
+
+/* The four steps of the application, text only: the application itself is shown running, live, so the page adds no screenshots. */
+.walk {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--s-5) var(--col-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.walk__step {
+  display: grid;
+  align-content: start;
+  gap: var(--s-3);
+  min-width: 0;
+  padding-top: var(--s-4);
+  border-top: 1px solid var(--line);
+}
+
+.walk__head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-3);
+}
+
+.walk__title {
+  font-size: var(--fs-lead);
+  font-weight: var(--fw-semibold);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.walk__text {
+  max-width: 52ch;
+  font-size: var(--fs-small);
+  line-height: 1.5;
+  color: var(--fg-muted);
+}
+
+/* Last step: export, and the printed part it leads to. */
+.walk__out {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s-4) var(--col-gap);
+  align-items: center;
+  padding-top: var(--s-5);
+  border-top: 1px solid var(--line);
+}
+
+.walk__out-text {
+  display: grid;
+  gap: var(--s-3);
+  justify-items: start;
+}
+
+.walk__out-photo {
+  display: grid;
+  gap: var(--s-2);
+  width: min(100%, 26rem);
+  margin: 0;
+  min-width: 0;
+}
+
+/* Application recording: one click away, closed until asked for. */
+.rec {
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.rec summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-1) var(--s-4);
+  padding: var(--s-4) 0;
+  cursor: pointer;
+  font-weight: var(--fw-medium);
+}
+
+.rec summary {
+  list-style: none;
+}
+
+.rec summary::-webkit-details-marker {
+  display: none;
+}
+
+.rec summary > span:first-child::after {
+  content: "+";
+  display: inline-grid;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-left: var(--s-3);
+  border: 1px solid var(--line-strong);
+  border-radius: 50%;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  line-height: 1;
+  color: var(--accent-text);
+}
+
+.rec[open] summary > span:first-child::after {
+  content: "−";
+}
+
+.rec summary:focus-visible {
+  outline: 2px solid var(--fg);
+  outline-offset: 4px;
+}
+
+.rec__meta {
+  font-size: var(--fs-small);
+  font-weight: var(--fw-regular, 400);
+  color: var(--fg-muted);
+}
+
+.rec__body {
+  padding-bottom: var(--s-5);
+}
+
+/* Where it stands: demonstrated / not measured / next version. */
+.close__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--s-5) var(--col-gap);
+}
+
+.close__col {
+  display: grid;
+  align-content: start;
+  gap: var(--s-3);
+  padding-top: var(--s-4);
+  border-top: 2px solid var(--line-strong);
+  font-size: var(--fs-small);
+  line-height: 1.45;
+  min-width: 0;
+}
+
+.close__col:first-child {
+  border-top-color: var(--color-accent);
+}
+
+.close__col > .label {
+  color: var(--accent-text);
+}
+
+.close__col ul {
+  display: grid;
+  gap: var(--s-2);
+}
+
+.close__col li {
+  position: relative;
+  padding-left: var(--s-4);
+}
+
+.close__col ul li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.7em;
+  width: 0.4rem;
+  height: 1px;
+  background: var(--fg-faint);
+}
+
+.close__questions {
+  display: grid;
+  gap: var(--s-3);
+}
+
+.close__col .close__questions li {
+  display: grid;
+  grid-template-columns: 1.75rem minmax(0, 1fr);
+  gap: var(--s-2);
+  padding-left: 0;
+}
+
+.close__plan {
+  display: grid;
+  gap: var(--s-3);
+}
+
+.close__plan dt {
+  margin-bottom: var(--s-1);
+}
+
+
+/* ---------- Responsive ---------------------------------------------- */
+
+@media (max-width: 899px) {
+  .glance__grid {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: var(--s-5);
+    align-items: start;
+  }
+  .glance__title {
+    font-size: clamp(2.4rem, 11vw, 3.4rem);
+  }
+  .moves {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "title"
+      "media"
+      "text"
+      "clips";
+    grid-template-rows: auto;
+    align-items: start;
+  }
+  .moves__media {
+    max-width: 34rem;
+  }
+  .moves__text {
+    max-width: 44ch;
+  }
+  .moves__clip {
+    width: min(100%, 34rem);
+  }
+  .parts,
+  .close__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .part--build {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .build__viewer {
+    max-width: none;
+    justify-self: stretch;
+  }
+  .build__viewer .oviewer__stage {
+    aspect-ratio: 4 / 3;
+    min-height: 18rem;
+  }
+  .app-intro,
+  .walk__out {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+  }
+  .walk__out-photo {
+    max-width: 30rem;
+  }
+}
+
+@media (max-width: 519px) {
+  .annot__pin {
+    width: 1.6rem;
+    height: 1.6rem;
+    margin: -0.8rem 0 0 -0.8rem;
+    font-size: 0.7rem;
+  }
+  .annot__pin--dot {
+    width: 0.75rem;
+    height: 0.75rem;
+    margin: -0.375rem 0 0 -0.375rem;
+  }
+  .annot__pin[data-label]::after {
+    font-size: 0.75rem;
+    padding: 0.15rem 0.5rem;
+  }
+}
+
+@media (max-width: 1099px) {
+  .walk {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 719px) {
+  .walk {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Desktop: the two columns of "How it moves" and of "How it was built" share the same top and bottom edges, always (Albert, 8 Nov).
+   How it moves: the photograph fills the height of the right-hand column (title, text and CAD animation) and the animation takes the space that is left under the text,
+   bottom edge level with the photograph; both captions hang under that edge on the same line.
+   How it was built: the model's stage takes the full row height; the photograph of the built rig fills the space under the text, bottom edge level with the stage.
+   Sizes come from container units (no percentage-height chains), so this needs container queries; without them the stacked layout below is used. */
+@supports (container-type: size) {
+  @media (min-width: 900px) {
+    .moves {
+      grid-template-rows: auto auto minmax(9rem, 1fr);
+      align-items: stretch;
+    }
+
+    .moves__media {
+      position: relative;
+      display: block;
+      min-height: 0;
+    }
+
+    /* Natural height of the row when the text column is short: the photograph at 1 : 1.3. */
+    .moves__media::before {
+      content: "";
+      display: block;
+      padding-top: calc(100% / var(--media-ratio));
+    }
+
+    .moves__media .media-frame {
+      position: absolute;
+      inset: 0;
+    }
+
+    .moves__media .media-frame__box {
+      width: 100%;
+      height: 100%;
+    }
+
+    .moves__media .drive__cap,
+    .moves__clip-cap {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+    }
+
+    .moves__clips {
+      --gap: var(--s-4);
+      container-type: size;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      gap: var(--gap);
+    }
+
+    .moves__clip {
+      --ch: min(56.25cqw, calc((100cqh - (var(--n, 1) - 1) * var(--gap)) / var(--n, 1)));
+      position: relative;
+      width: calc(var(--ch) * 1.7778);
+      height: var(--ch);
+      max-width: 100%;
+      flex: none;
+    }
+
+    .moves__clip .media-frame,
+    .moves__clip .media-frame__box {
+      width: 100%;
+      height: 100%;
+    }
+
+    .part--build {
+      align-items: stretch;
+    }
+
+    .build__side {
+      container-type: inline-size;
+      grid-template-rows: auto minmax(8rem, 1fr);
+      gap: var(--s-5);
+      min-height: 0;
+    }
+
+    /* The photograph of the built rig: as tall as the space under the text, bottom edge level with the model stage; width from its 3 : 4 shape. */
+    .build__photo {
+      container-type: size;
+      position: relative;
+      width: 100%;
+      min-height: 0;
+    }
+
+    .build__zoom,
+    .build__zoom .zoom__open,
+    .build__zoom .media-frame,
+    .build__zoom .media-frame__box {
+      width: min(100cqw, 75cqh);
+      height: 100cqh;
+    }
+
+    .build__photo figcaption {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+    }
+
+    .build__viewer {
+      align-self: stretch;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .build__viewer .oviewer__stage {
+      flex: 1 1 auto;
+    }
+  }
+}
