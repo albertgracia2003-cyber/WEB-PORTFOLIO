@@ -10,14 +10,17 @@ import { cn, pad, rd } from "@/lib/utils";
 interface CaseHeroProps {
   project: Project;
   trail: readonly { label: string; href?: string }[];
-  meta: readonly { term: string; value: ReactNode }[];
+  /** Optional strip of project facts under the hero; omitted when a page shows them elsewhere. */
+  meta?: readonly { term: string; value: ReactNode }[];
   intro: ReactNode;
+  /** Replaces the project subtitle under the title (e.g. an opening line for the story). */
+  headline?: ReactNode;
   /** "flagship" = cinematic title overlapping the media stage. */
   variant?: "flagship" | "standard";
   children?: ReactNode;
 }
 
-export function CaseHero({ project, trail, meta, intro, variant = "standard", children }: CaseHeroProps) {
+export function CaseHero({ project, trail, meta, intro, headline, variant = "standard", children }: CaseHeroProps) {
   return (
     <header className={cn("case-hero", `case-hero--${variant}`)}>
       <div className="case-hero__light" aria-hidden="true" />
@@ -29,7 +32,7 @@ export function CaseHero({ project, trail, meta, intro, variant = "standard", ch
         <h1 className="case-hero__title">{project.title}</h1>
         <div className="case-hero__grid">
           <p className="case-hero__subtitle" data-reveal>
-            {project.subtitle}
+            {headline ?? project.subtitle}
           </p>
           <div className="case-hero__intro prose" data-reveal style={rd(100)}>
             {intro}
@@ -37,16 +40,18 @@ export function CaseHero({ project, trail, meta, intro, variant = "standard", ch
         </div>
       </div>
       {children ? <div className="container case-hero__media">{children}</div> : null}
-      <div className="container">
-        <dl className="spec-strip">
-          {meta.map(({ term, value }) => (
-            <div key={term} className="spec-strip__cell">
-              <dt className="label">{term}</dt>
-              <dd>{value}</dd>
-            </div>
-          ))}
-        </dl>
-      </div>
+      {meta?.length ? (
+        <div className="container">
+          <dl className="spec-strip">
+            {meta.map(({ term, value }) => (
+              <div key={term} className="spec-strip__cell">
+                <dt className="label">{term}</dt>
+                <dd>{value}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      ) : null}
     </header>
   );
 }

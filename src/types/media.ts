@@ -30,8 +30,11 @@ export interface MediaAsset {
   poster?: string;
   /** Visible caption under the media. */
   caption?: string;
-  /** Videos: "ambient" = short muted loop (default); "controls" = recording with native player controls. */
-  playback?: "ambient" | "controls";
+  /**
+   * Videos: "ambient" = short muted loop (default); "controls" = recording with native player controls;
+   * "toggle" = muted loop that never autoplays and starts/stops with one click anywhere on the frame (for presenting).
+   */
+  playback?: "ambient" | "controls" | "toggle";
   /** Captions/subtitles file for videos with meaningful speech. */
   captionsTrack?: string;
   /** Images: "contain" shows the whole asset inside the frame (logos, cut-outs) instead of cropping to fill it. */

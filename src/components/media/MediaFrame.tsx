@@ -18,6 +18,8 @@ interface MediaFrameProps {
   showCaption?: boolean;
   /** Override the aspect ratio defined in the registry. */
   aspect?: AspectRatio;
+  /** CSS object-position for a cropped image (used with `aspect`), e.g. "30% 50%". */
+  position?: string;
   /** Clip-path reveal on scroll. */
   reveal?: boolean;
   className?: string;
@@ -34,6 +36,7 @@ export function MediaFrame({
   sizes = "100vw",
   showCaption = true,
   aspect,
+  position,
   reveal = true,
   className,
 }: MediaFrameProps) {
@@ -54,6 +57,7 @@ export function MediaFrame({
         fill
         sizes={sizes}
         priority={priority}
+        style={position ? { objectPosition: position } : undefined}
         className={cn("media-frame__img", asset.fit === "contain" && "media-frame__img--contain")}
       />
     );

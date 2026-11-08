@@ -14,10 +14,15 @@ import { cn } from "@/lib/utils";
  *                     few degrees (eased, returns to rest), never spins, has no controls, ignores touch and pointer
  *                     events on itself (links and scrolling are untouched) and stays still with reduced motion.
  * variant "inspect" – the case-study viewer: drag (mouse, pen or touch) to orbit, buttons and arrow keys as
- *                     alternatives, Ctrl/⌘ + wheel or the +/− buttons to zoom. Vertical swipes on touch still scroll the page.
+ *                     alternatives, Ctrl/⌘ + wheel or the +/− buttons to zoom (`scrollZoom`: a plain wheel too; `minimal`: no bar under the stage). Vertical swipes on touch still scroll the page.
  *
  * Geometry is the original mesh (packed derivative = same vertices and triangles; STL as fallback). Nothing is
  * simplified, so thin ribs and the perforations are kept.
+ *
+ * The inspect variant can show another real model instead (`model`): the case study uses it for the scanning-rig CAD
+ * assembly, with the ivory-satin presentation material (`material="satin"`), its own opening view (`home`), named
+ * views (`views`) and its own wording (`subject`, `note`). Those props are all optional; without them the viewer is
+ * exactly the orthosis viewer.
  */
 
 type Status = "idle" | "loading" | "ready" | "error" | "nogl";
@@ -52,12 +57,6 @@ export const POSES: Record<HeroPose, PoseCfg> = {
   c: { roll: 18 * DEG, spin: 0, yaw: -32 * DEG, pitch: 14 * DEG, tilt: { yaw: 6 * DEG, pitch: 3.5 * DEG }, view: (w) => (w < 700 ? { cx: 0.5, cy: 0.5, fill: 0.66 } : { cx: 0.47, cy: 0.5, fill: 0.64 }) },
 };
 
-const PRESETS = {
-  perspective: { yaw: HOME.yaw, pitch: HOME.pitch },
-  side: { yaw: 0, pitch: 0 },
-  top: { yaw: HOME.yaw, pitch: 89 * DEG },
-} as const;
-
 interface Look {
   /** Use the original steel-blue shader (dark homepage hero). */
   legacy?: boolean;
@@ -74,7 +73,7 @@ interface Look {
   fill: Rgb;
 }
 
-function readLook(el: Element, hero: boolean, pose?: HeroPose): Look {
+function readLook(el: Element, hero: boolean, pose?: HeroPose, satin?: boolean): Look {
   const cs = getComputedStyle(el);
   const tok = (name: string, fb: string) => parseColor(cs.getPropertyValue(name), parseColor(fb, [0.5, 0.5, 0.5]));
   const dark = document.documentElement.getAttribute("data-theme") === "dark";
@@ -86,6 +85,12 @@ function readLook(el: Element, hero: boolean, pose?: HeroPose): Look {
     // Dark theme keeps the original steel-blue background sculpture.
     const steel = tok("--color-steel-blue", "#46566c");
     return { legacy: true, tone: mix(steel, metal, 0.3), rim: accent, bg, dim: 0.2, ambient: 0.4, rimK: 0.4, spec: 0.03, key: [0.42, 0.46, 0.52], fill: [0.2, 0.26, 0.36] };
+  }
+  if (satin) {
+    // CAD presentation on a slate stage: bright ivory satin, cool deep shadows and a neutral (not terracotta) bounce light, so every face reads as one material.
+    return dark
+      ? { tone: [1.1, 1.06, 1.0], shade: [0.3, 0.34, 0.44], rim: [0.45, 0.55, 0.72], bg, dim: 0, ambient: 1, rimK: 0.24, spec: 0.22, key: [0.95, 0.9, 0.84], fill: [0.2, 0.28, 0.42] }
+      : { tone: [1.28, 1.23, 1.14], shade: [0.34, 0.38, 0.48], rim: [0.5, 0.6, 0.78], bg, dim: 0, ambient: 1, rimK: 0.22, spec: 0.26, key: [1.0, 0.96, 0.9], fill: [0.28, 0.4, 0.58] };
   }
   if (pose || hero) {
     // Ivory satin presentation material, same in both themes; only exposure and shadow depth change with the ground.
@@ -124,8 +129,64 @@ interface Api {
   reset(): void;
 }
 
-export function OrthosisViewer({ variant, className, pose }: { variant: "hero" | "inspect"; className?: string; pose?: HeroPose }) {
+/** A named camera position for the inspect viewer's buttons (angles in degrees). */
+export interface ViewerView {
+  label: string;
+  yaw: number;
+  pitch: number;
+}
+
+const DEFAULT_VIEWS: readonly ViewerView[] = [
+  { label: "Perspective", yaw: HOME.yaw / DEG, pitch: HOME.pitch / DEG },
+  { label: "Side", yaw: 0, pitch: 0 },
+  { label: "Top", yaw: HOME.yaw / DEG, pitch: 89 },
+];
+
+export function OrthosisViewer({
+  variant,
+  className,
+  pose,
+  model: modelProp,
+  material,
+  home: homeProp,
+  views = DEFAULT_VIEWS,
+  subject = "the final orthosis",
+  fallback = "The printed result and the generated design are shown in the photographs above.",
+  note,
+  crease = 48,
+  minimal = false,
+  scrollZoom = false,
+}: {
+  variant: "hero" | "inspect";
+  className?: string;
+  pose?: HeroPose;
+  /** Inspect only: the packed mesh (and optional STL fallback) to show instead of the final orthosis. */
+  model?: { packed?: string; src?: string };
+  /** Inspect only: "satin" = ivory presentation material (default: terracotta). */
+  material?: "terracotta" | "satin";
+  /** Inspect only: opening view in degrees (default: the orthosis view). */
+  home?: { yaw: number; pitch: number };
+  /** Inspect only: the view buttons (the first one is the opening view). */
+  views?: readonly ViewerView[];
+  /** Inspect only: what the viewer shows, for the loading and error text and the accessible name. */
+  subject?: string;
+  /** Inspect only: sentence shown with the error state. */
+  fallback?: string;
+  /** Inspect only: a small muted line under the hint (e.g. how the model was prepared for the web). */
+  note?: string;
+  /** Inspect only: faces that bend more than this (degrees) from the smoothed normal keep a hard edge. A simplified mesh needs a lower value. */
+  crease?: number;
+  /** Inspect only: no hint line and no buttons under the stage (a small icon on the stage says it can be moved; the +/− and Reset buttons stay on touch screens only). Double-click resets the view. */
+  minimal?: boolean;
+  /** Inspect only: a plain mouse wheel over the stage zooms (default: Ctrl/⌘ + wheel). At the end of the zoom range the wheel scrolls the page again. */
+  scrollZoom?: boolean;
+}) {
   const hero = variant === "hero";
+  const satin = !hero && material === "satin";
+  const homeYaw = homeProp ? homeProp.yaw * DEG : HOME.yaw;
+  const homePitch = homeProp ? homeProp.pitch * DEG : HOME.pitch;
+  const modelPacked = modelProp?.packed;
+  const modelSrc = modelProp?.src;
   const P = pose ? POSES[pose] : null;
   const rootRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -171,22 +232,23 @@ export function OrthosisViewer({ variant, className, pose }: { variant: "hero" |
       return { prog, U: Object.fromEntries(UNI.map((n) => [n, gl.getUniformLocation(prog, n)])), aPos: gl.getAttribLocation(prog, "aPos"), aNor: gl.getAttribLocation(prog, "aNor") };
     };
     // Homepage hero: ivory satin in the light theme, the original steel-blue material in the dark theme (both compiled; the theme picks).
-    const satinP = pose || hero ? build(SATIN_FS) : null;
-    const plainP = !pose ? build(MODEL_FS) : null;
-    if ((pose || hero) && !satinP) return later("nogl");
-    if (!pose && !hero && !plainP) return later("nogl");
+    const satinP = pose || hero || satin ? build(SATIN_FS) : null;
+    const plainP = !pose && !satin ? build(MODEL_FS) : null;
+    if ((pose || hero || satin) && !satinP) return later("nogl");
+    if (!pose && !hero && !satin && !plainP) return later("nogl");
 
     const buffers: WebGLBuffer[] = [];
     let mesh: { pos: WebGLBuffer; nor: WebGLBuffer; count: number } | null = null;
     let model: Mat4 | null = null;
     let corners: [number, number, number][] = [];
     let radius = 100;
-    let look = readLook(root, hero, pose);
+    let look = readLook(root, hero, pose, satin);
     let cssW = 1;
     let cssH = 1;
     let fit = 600;
     let zoom = 1;
-    const REST = P ? { yaw: P.yaw, pitch: P.pitch } : HOME;
+    const HOME_V = { yaw: homeYaw, pitch: homePitch };
+    const REST = P ? { yaw: P.yaw, pitch: P.pitch } : HOME_V;
     const TILT = P ? P.tilt : HERO_TILT;
     const heroView = P ? P.view : heroViewDefault;
     const cur = { ...REST };
@@ -307,7 +369,7 @@ export function OrthosisViewer({ variant, className, pose }: { variant: "hero" |
     cleanups.push(() => ro.disconnect());
 
     const mo = new MutationObserver(() => {
-      look = readLook(root, hero, pose);
+      look = readLook(root, hero, pose, satin);
       request();
     });
     mo.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
@@ -352,6 +414,7 @@ export function OrthosisViewer({ variant, className, pose }: { variant: "hero" |
         drag = { id: e.pointerId, x: e.clientX, y: e.clientY };
         canvas.setPointerCapture(e.pointerId);
         root.dataset.dragging = "true";
+        root.dataset.touched = "true";
         if (animRaf) cancelAnimationFrame(animRaf);
         animRaf = 0;
         lastT = 0;
@@ -375,12 +438,19 @@ export function OrthosisViewer({ variant, className, pose }: { variant: "hero" |
         }
       };
       const onWheel = (e: WheelEvent) => {
-        // Only a pinch gesture or Ctrl/⌘ + wheel zooms; a plain wheel always scrolls the page.
-        if (!e.ctrlKey && !e.metaKey) return;
+        // A pinch gesture or Ctrl/⌘ + wheel always zooms; a plain wheel zooms only when `scrollZoom` is on, and then
+        // hands the scroll back to the page at either end of the zoom range so the model never traps it.
+        const pinch = e.ctrlKey || e.metaKey;
+        if (!pinch && !scrollZoom) return;
+        const dy = e.deltaMode === 1 ? e.deltaY * 33 : e.deltaMode === 2 ? e.deltaY * 400 : e.deltaY;
+        const next = clamp(zoom * Math.exp(-dy * (pinch ? 0.01 : 0.0016)), 0.7, 3.2);
+        if (!pinch && next === zoom) return;
         e.preventDefault();
-        zoom = clamp(zoom * Math.exp(-e.deltaY * 0.01), 0.7, 3.2);
+        root.dataset.touched = "true";
+        zoom = next;
         request();
       };
+      const onDouble = () => api.current?.reset();
       const onKey = (e: KeyboardEvent) => {
         const k = e.key;
         let handled = true;
@@ -391,8 +461,8 @@ export function OrthosisViewer({ variant, className, pose }: { variant: "hero" |
         else if (k === "+" || k === "=") zoom = clamp(zoom * 1.15, 0.7, 3.2);
         else if (k === "-") zoom = clamp(zoom / 1.15, 0.7, 3.2);
         else if (k === "0" || k === "Home") {
-          cur.yaw = HOME.yaw;
-          cur.pitch = HOME.pitch;
+          cur.yaw = HOME_V.yaw;
+          cur.pitch = HOME_V.pitch;
           zoom = 1;
         } else handled = false;
         if (!handled) return;
@@ -407,6 +477,7 @@ export function OrthosisViewer({ variant, className, pose }: { variant: "hero" |
       canvas.addEventListener("pointercancel", onUp);
       canvas.addEventListener("wheel", onWheel, { passive: false });
       canvas.addEventListener("keydown", onKey);
+      canvas.addEventListener("dblclick", onDouble);
       cleanups.push(() => {
         canvas.removeEventListener("pointerdown", onDown);
         canvas.removeEventListener("pointermove", onMoveDrag);
@@ -414,6 +485,7 @@ export function OrthosisViewer({ variant, className, pose }: { variant: "hero" |
         canvas.removeEventListener("pointercancel", onUp);
         canvas.removeEventListener("wheel", onWheel);
         canvas.removeEventListener("keydown", onKey);
+        canvas.removeEventListener("dblclick", onDouble);
       });
     }
     api.current = {
@@ -435,7 +507,7 @@ export function OrthosisViewer({ variant, className, pose }: { variant: "hero" |
       },
       reset() {
         zoom = 1;
-        this.set(HOME);
+        this.set(HOME_V);
       },
     };
     cleanups.push(() => {
@@ -447,7 +519,7 @@ export function OrthosisViewer({ variant, className, pose }: { variant: "hero" |
     const start = async () => {
       setStatus("loading");
       let last = 0;
-      const indexed = await loadMesh(hero ? heroOrthosis : finalOrthosis, abort.signal, (f) => {
+      const indexed = await loadMesh(hero ? heroOrthosis : modelPacked || modelSrc ? { packed: modelPacked, src: modelSrc } : finalOrthosis, abort.signal, (f) => {
         const n = performance.now();
         if (n - last > 100) {
           last = n;
@@ -469,7 +541,15 @@ export function OrthosisViewer({ variant, className, pose }: { variant: "hero" |
       model = multiply(translation(-mid[0], -mid[1], -mid[2]), D);
       corners = pts.map((p) => [p[0] - mid[0], p[1] - mid[1], p[2] - mid[2]] as [number, number, number]);
       radius = Math.max(...corners.map((c) => Math.hypot(c[0], c[1], c[2])));
-      const r = buildRenderMesh(indexed);
+      if (modelPacked || modelSrc) {
+        // A custom model: frame it by its real extent (the farthest vertex), not by the corners of its box, which can be empty.
+        const cx = (indexed.min[0] + indexed.max[0]) / 2, cy = (indexed.min[1] + indexed.max[1]) / 2, cz = (indexed.min[2] + indexed.max[2]) / 2;
+        let far = 0;
+        const pp = indexed.positions;
+        for (let i = 0; i < pp.length; i += 3) far = Math.max(far, Math.hypot(pp[i]! - cx, pp[i + 1]! - cy, pp[i + 2]! - cz));
+        radius = far * 0.95;
+      }
+      const r = buildRenderMesh(indexed, crease);
       const mk = (d: Float32Array) => {
         const b = gl.createBuffer()!;
         gl.bindBuffer(gl.ARRAY_BUFFER, b);
@@ -478,7 +558,7 @@ export function OrthosisViewer({ variant, className, pose }: { variant: "hero" |
         return b;
       };
       mesh = { pos: mk(r.positions), nor: mk(r.normals), count: r.count };
-      look = readLook(root, hero, pose);
+      look = readLook(root, hero, pose, satin);
       computeFit();
       draw();
       setStatus("ready");
@@ -517,7 +597,7 @@ export function OrthosisViewer({ variant, className, pose }: { variant: "hero" |
       if (satinP) gl.deleteProgram(satinP.prog);
       if (plainP) gl.deleteProgram(plainP.prog);
     };
-  }, [attempt, hero, pose, P]);
+  }, [attempt, hero, pose, P, satin, homeYaw, homePitch, modelPacked, modelSrc, crease, scrollZoom]);
 
   const retry = useCallback(() => {
     setStatus("idle");
@@ -536,25 +616,35 @@ export function OrthosisViewer({ variant, className, pose }: { variant: "hero" |
   }
 
   return (
-    <div ref={rootRef} className={cn("oviewer", `is-${status}`, className)}>
+    <div ref={rootRef} className={cn("oviewer", minimal && "oviewer--minimal", `is-${status}`, className)}>
       <div className="oviewer__stage">
         <canvas
           ref={canvasRef}
           className="oviewer__canvas"
           tabIndex={0}
           role="img"
-          aria-label="Interactive 3D view of the final orthosis. Drag to rotate; arrow keys rotate, plus and minus zoom, 0 resets."
-          aria-describedby={helpId}
+          aria-label={`Interactive 3D view of ${subject}. Drag to rotate; ${scrollZoom ? "scroll" : "Ctrl or Command with scroll"}, plus and minus zoom; arrow keys rotate; double-click or 0 resets.`}
+          aria-describedby={minimal ? undefined : helpId}
         />
+        {minimal && ready ? (
+          <span className="oviewer__cue" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 2l6.4 3.6v7.2L12 16.4l-6.4-3.6V5.6z" />
+              <path d="M12 9.2l6.4-3.6M12 9.2L5.6 5.6M12 9.2v7.2" />
+              <path d="M4.6 19.4c2 1.2 4.4 1.8 7.4 1.8s5.4-.6 7.4-1.8" />
+              <path d="M16.6 18.2l2.8 1.2-1.3 2.7" />
+            </svg>
+          </span>
+        ) : null}
         {status === "loading" || status === "idle" ? (
           <p className="oviewer__state" role="status">
-            Loading the orthosis model… {progress > 0 && progress < 1 ? `${Math.round(progress * 100)}%` : ""}
+            Loading {subject}… {progress > 0 && progress < 1 ? `${Math.round(progress * 100)}%` : ""}
           </p>
         ) : null}
         {failed ? (
           <div className="oviewer__state oviewer__state--error" role="alert">
             <p>{status === "nogl" ? "This browser cannot display the 3D model (WebGL is unavailable)." : "The 3D model could not be loaded."}</p>
-            <p className="oviewer__fallback">The printed result and the generated design are shown in the photographs above.</p>
+            <p className="oviewer__fallback">{fallback}</p>
             {status === "error" ? (
               <button type="button" className="oviewer__btn" onClick={retry}>
                 Try again
@@ -563,20 +653,23 @@ export function OrthosisViewer({ variant, className, pose }: { variant: "hero" |
           </div>
         ) : null}
       </div>
-      <div className="oviewer__bar">
-        <p id={helpId} className="oviewer__hint">
-          Drag to rotate · Ctrl/⌘ + scroll or +/− to zoom
-        </p>
+      <div className={cn("oviewer__bar", minimal && "oviewer__bar--touch")}>
+        {minimal ? null : (
+          <div className="oviewer__help">
+            <p id={helpId} className="oviewer__hint">
+              Drag to rotate · Ctrl/⌘ + scroll or +/− to zoom
+            </p>
+            {note ? <p className="oviewer__note">{note}</p> : null}
+          </div>
+        )}
         <div className="oviewer__controls" role="group" aria-label="Model view controls">
-          <button type="button" className="oviewer__btn" disabled={!ready} onClick={() => api.current?.set(PRESETS.perspective)}>
-            Perspective
-          </button>
-          <button type="button" className="oviewer__btn" disabled={!ready} onClick={() => api.current?.set(PRESETS.side)}>
-            Side
-          </button>
-          <button type="button" className="oviewer__btn" disabled={!ready} onClick={() => api.current?.set(PRESETS.top)}>
-            Top
-          </button>
+          {minimal
+            ? null
+            : views.map((v) => (
+                <button key={v.label} type="button" className="oviewer__btn" disabled={!ready} onClick={() => api.current?.set({ yaw: v.yaw * DEG, pitch: v.pitch * DEG })}>
+                  {v.label}
+                </button>
+              ))}
           <button type="button" className="oviewer__btn oviewer__btn--icon" disabled={!ready} aria-label="Zoom out" onClick={() => api.current?.zoom(1 / 1.2)}>
             −
           </button>

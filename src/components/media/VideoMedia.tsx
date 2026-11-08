@@ -10,6 +10,9 @@ import type { MediaAsset } from "@/types/media";
  *   pause / play control (WCAG 2.2.2).
  * - "controls": explanatory recording with native controls; never autoplays
  *   or loops.
+ * - "toggle": muted loop for presenting; never autoplays. One click anywhere on
+ *   the frame (or Enter / Space on the focused frame) starts and stops it, and
+ *   it stops when scrolled out of view.
  * Both: the file is only attached when the frame comes near the viewport
  * (poster until then). One video plays at a time: starting any video pauses
  * the others, and among the visible ambient loops only the most visible one
@@ -46,7 +49,9 @@ function arbitrate() {
 
 export function VideoMedia({ asset }: { asset: MediaAsset }) {
   const ref = useRef<HTMLVideoElement>(null);
-  const ambient = asset.playback !== "controls";
+  const mode = asset.playback ?? "ambient";
+  const toggleMode = mode === "toggle";
+  const ambient = mode === "ambient";
   const [near, setNear] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [userPaused, setUserPaused] = useState(false);
@@ -145,14 +150,14 @@ export function VideoMedia({ asset }: { asset: MediaAsset }) {
   };
 
   return (
-    <div className={ambient ? "video-media" : "video-media video-media--controls"}>
+    <div className={mode === "controls" ? "video-media video-media--controls" : toggleMode ? "video-media video-media--toggle" : "video-media"}>
       <video
         ref={ref}
         className="media-frame__img"
         poster={asset.poster}
-        muted={ambient}
-        loop={ambient}
-        controls={!ambient}
+        muted={ambient || toggleMode}
+        loop={ambient || toggleMode}
+        controls={mode === "controls"}
         playsInline
         preload={near ? "metadata" : "none"}
         aria-label={asset.alt || undefined}
@@ -161,6 +166,20 @@ export function VideoMedia({ asset }: { asset: MediaAsset }) {
         {near ? <source src={asset.src} type="video/mp4" /> : null}
         {asset.captionsTrack ? <track kind="captions" src={asset.captionsTrack} srcLang="en" default /> : null}
       </video>
+      {toggleMode ? (
+        <button
+          type="button"
+          className={playing ? "video-media__surface is-playing" : "video-media__surface"}
+          onClick={toggle}
+          aria-pressed={playing}
+          aria-label={`${playing ? "Pause" : "Play"}${asset.label ? `: ${asset.label}` : " the animation"}`}
+        >
+          <span className="video-media__cue" aria-hidden="true">
+            <span className="video-media__icon">{playing ? "❚❚" : "▶"}</span>
+            <span className="video-media__word">{playing ? "Pause" : "Play"}</span>
+          </span>
+        </button>
+      ) : null}
       {ambient ? (
         <button type="button" className="video-media__toggle" onClick={toggle} aria-pressed={!playing}>
           <span aria-hidden="true">{playing ? "❚❚" : "▶"}</span>

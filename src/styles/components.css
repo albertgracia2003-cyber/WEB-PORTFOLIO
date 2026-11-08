@@ -528,6 +528,67 @@
   backdrop-filter: blur(8px);
 }
 
+/* Toggle mode (presenting): the whole frame is one button; a pill says what a click will do. */
+.video-media__surface {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--offwhite);
+  cursor: pointer;
+}
+
+.video-media__cue {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.75rem 1.3rem 0.75rem 1.1rem;
+  border: 1px solid rgba(244, 241, 235, 0.4);
+  border-radius: var(--radius-pill);
+  background: rgba(32, 36, 43, 0.62);
+  font-size: var(--fs-small);
+  font-weight: var(--fw-medium);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  transition:
+    opacity var(--dur-2) var(--ease-out),
+    transform var(--dur-2) var(--ease-out);
+}
+
+.video-media__icon {
+  font-size: 0.95rem;
+}
+
+.video-media__surface:hover .video-media__cue {
+  transform: scale(1.03);
+}
+
+/* While it plays the pill moves to the corner and stays quiet; hover or focus brings it back. */
+.video-media__surface.is-playing {
+  place-items: end start;
+  padding: var(--s-4);
+}
+
+.video-media__surface.is-playing .video-media__cue {
+  opacity: 0.7;
+}
+
+.video-media__surface.is-playing:hover .video-media__cue,
+.video-media__surface.is-playing:focus-visible .video-media__cue {
+  opacity: 1;
+}
+
+.video-media__surface:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: -3px;
+}
+
 /* ---------- Comparison slider ------------------------------------- */
 
 .compare {
@@ -920,52 +981,6 @@
 }
 
 /* ---------- Chapter navigation ------------------------------------ */
-
-.chapter-nav {
-  position: sticky;
-  top: calc(3.6rem + var(--s-6));
-  padding: var(--s-4);
-  border-radius: var(--radius-2);
-  background: color-mix(in srgb, var(--color-surface-elevated) 55%, transparent);
-  border: 1px solid var(--line);
-}
-
-.chapter-nav__title {
-  margin-bottom: var(--s-3);
-}
-
-.chapter-nav ol {
-  display: grid;
-  border-left: 1px solid var(--line);
-}
-
-.chapter-nav__link {
-  display: flex;
-  gap: var(--s-3);
-  padding: 0.4rem 0 0.4rem var(--s-4);
-  margin-left: -1px;
-  border-left: 2px solid transparent;
-  font-size: var(--fs-small);
-  color: var(--fg-faint);
-  transition:
-    color var(--dur-1) var(--ease-out),
-    border-color var(--dur-2) var(--ease-out);
-}
-
-.chapter-nav__link.is-active {
-  color: var(--fg);
-  border-left-color: var(--color-accent);
-}
-
-.chapter-nav__link.is-active .mono {
-  color: var(--accent-text);
-}
-
-@media (hover: hover) {
-  .chapter-nav__link:hover {
-    color: var(--fg);
-  }
-}
 
 /* ---------- Disclosure (native <details>) ------------------------- */
 

@@ -57,3 +57,16 @@ export const finalOrthosis = ortesisModelStack.stages.find((s) => s.id === "fina
  * `media-source/ortesis-studio/`; the site serves the lossless packed derivative (same vertices and triangles).
  */
 export const heroOrthosis = { packed: `${dir}/ortesis-prototipo.mesh.bin` } as { packed: string; src?: string };
+
+/**
+ * The scanning-rig CAD assembly shown in the case study's "How it was built" (supplied 8 Nov 2026,
+ * `fotogrametria model def.stl`, latest version supplied later the same day: 359 194 triangles, 18 MB, 28 rigid bodies). The original STL stays in `media-source/ortesis-studio/`
+ * (`fotogrametria-model-def.stl`); the site serves a web derivative made with `scripts/simplify-stl.mjs`
+ * (125 000 triangles, 1.5 MB; flat areas lose triangles first, gear teeth, holes and ribs are kept; no geometry is
+ * added). It is NOT lossless, so the page says so next to the viewer. Units are those of the source file.
+ */
+export const rigCad = {
+  packed: `${dir}/ortesis-rig-cad.mesh.bin`,
+  sourceTriangles: 359194,
+  webTriangles: 125000,
+} as const;

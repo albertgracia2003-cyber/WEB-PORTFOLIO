@@ -16,6 +16,7 @@ export function MediaZoom({
   fig,
   sizes,
   aspect,
+  position,
   className,
   hint = "Enlarge",
   showCaption = true,
@@ -24,6 +25,8 @@ export function MediaZoom({
   fig?: string;
   sizes?: string;
   aspect?: AspectRatio;
+  /** Crop position of the inline image (the enlarged view always shows the whole image). */
+  position?: string;
   className?: string;
   hint?: string;
   /** Show the caption under the inline image (the enlarged view always shows it). */
@@ -42,12 +45,12 @@ export function MediaZoom({
     return () => d.removeEventListener("close", onClose);
   }, []);
 
-  if (!asset.src) return <MediaFrame id={id} fig={fig} sizes={sizes} aspect={aspect} className={className} />;
+  if (!asset.src) return <MediaFrame id={id} fig={fig} sizes={sizes} aspect={aspect} position={position} className={className} />;
 
   return (
     <div className={className}>
       <button type="button" className="zoom__open" onClick={open} aria-haspopup="dialog">
-        <MediaFrame id={id} fig={fig} sizes={sizes} aspect={aspect} showCaption={showCaption} />
+        <MediaFrame id={id} fig={fig} sizes={sizes} aspect={aspect} position={position} showCaption={showCaption} />
         <span className="zoom__hint" aria-hidden="true">
           <svg viewBox="0 0 16 16">
             <path d="M9.5 2.5h4v4M13.5 2.5 9 7M6.5 13.5h-4v-4M2.5 13.5 7 9" />

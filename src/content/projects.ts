@@ -24,7 +24,7 @@ const projects: readonly Project[] = [
       "Computational geometry",
       "Workflow development",
     ],
-    tools: ["Creality 3D scanner", "Arduino", "Blender (Geometry Nodes, Python/BMesh)", "Three.js", "3D printing"],
+    tools: ["3D scanner", "Arduino", "Blender (Geometry Nodes, Python/BMesh)", "Three.js", "3D printing"],
     cover: "ortesis-hero",
     related: ["procedural-city", "parametric-drawer"],
     publication: "published",
