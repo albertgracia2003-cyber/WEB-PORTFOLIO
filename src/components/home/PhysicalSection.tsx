@@ -1,8 +1,7 @@
 import { SectionHeading } from "@/components/ui/primitives";
-import { HandlebarStudy } from "@/components/projects/HandlebarStudy";
-import { MotoSpiritEntry } from "@/components/projects/MotoSpiritEntry";
-import { AedEntry } from "@/components/projects/AedEntry";
+import { TiriEntry } from "@/components/projects/TiriEntry";
 
+/** 02 Where geometry becomes tangible: the Three-Instrument Retention Insert only (the Bicycle Handlebar moved to section 04 on 16 Nov 2026, Albert). */
 export function PhysicalSection() {
   return (
     <section id="physical" className="section surface-base physical atmos atmos--ember atmos--quiet" aria-labelledby="physical-title">
@@ -21,10 +20,7 @@ export function PhysicalSection() {
         />
 
         <div className="mx-list">
-          <HandlebarStudy />
-          <MotoSpiritEntry />
-
-          <AedEntry />
+          <TiriEntry />
         </div>
       </div>
     </section>

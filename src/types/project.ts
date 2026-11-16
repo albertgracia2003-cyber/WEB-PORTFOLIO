@@ -8,6 +8,7 @@ export type Maturity =
   | "functional-prototype"
   | "working-system"
   | "built-object"
+  | "digital-demonstrator"
   | "concept"
   | "planned";
 

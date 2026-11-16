@@ -4,7 +4,7 @@ import { MediaPlaceholder } from "./MediaPlaceholder";
 import { showDevNotes } from "@/content/site";
 import { VideoMedia } from "./VideoMedia";
 import { cn } from "@/lib/utils";
-import type { AspectRatio } from "@/types/media";
+import type { AspectRatio, MediaAsset } from "@/types/media";
 
 interface MediaFrameProps {
   id: MediaId;
@@ -20,6 +20,8 @@ interface MediaFrameProps {
   aspect?: AspectRatio;
   /** CSS object-position for a cropped image (used with `aspect`), e.g. "30% 50%". */
   position?: string;
+  /** Videos only: use another playback mode here than the registry slot has (e.g. "ambient" for the small homepage clip). */
+  playback?: MediaAsset["playback"];
   /** Clip-path reveal on scroll. */
   reveal?: boolean;
   className?: string;
@@ -37,6 +39,7 @@ export function MediaFrame({
   showCaption = true,
   aspect,
   position,
+  playback,
   reveal = true,
   className,
 }: MediaFrameProps) {
@@ -49,6 +52,24 @@ export function MediaFrame({
   let body: React.ReactNode;
   if (pending) {
     body = <MediaPlaceholder asset={aspect ? { ...asset, aspect } : asset} fig={fig} />;
+  } else if (asset.kind === "image" && asset.srcSet) {
+    // Responsive candidates supplied by the slot: a plain <img> so `srcset` reaches the HTML (the static export has no optimiser).
+    body = (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src={asset.src}
+        srcSet={asset.srcSet}
+        sizes={sizes}
+        width={asset.width}
+        height={asset.height}
+        alt={asset.alt}
+        loading={priority ? "eager" : "lazy"}
+        decoding="async"
+        fetchPriority={priority ? "high" : undefined}
+        style={position ? { objectPosition: position } : undefined}
+        className={cn("media-frame__img", asset.fit === "contain" && "media-frame__img--contain")}
+      />
+    );
   } else if (asset.kind === "image") {
     body = (
       <Image
@@ -62,7 +83,7 @@ export function MediaFrame({
       />
     );
   } else {
-    body = <VideoMedia asset={asset} />;
+    body = <VideoMedia asset={playback ? { ...asset, playback } : asset} />;
   }
 
   return (

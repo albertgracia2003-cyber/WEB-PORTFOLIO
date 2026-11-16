@@ -26,7 +26,7 @@ export default function ChairPage() {
       <header className="chair__hero">
         <div className="container">
           <div className="case-hero__top">
-            <Breadcrumbs trail={[{ label: "Portfolio", href: "/" }, { label: "Mechanical & Product Design", href: "/#physical" }, { label: "Bar Stool" }]} />
+            <Breadcrumbs trail={[{ label: "Portfolio", href: "/" }, { label: "University projects", href: "/#university" }, { label: "Bar Stool" }]} />
             <StatusBadge maturity={project.maturity} authorship={project.authorship} />
           </div>
         </div>

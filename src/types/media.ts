@@ -28,6 +28,12 @@ export interface MediaAsset {
   srcWebm?: string;
   /** Poster frame for videos (public path). */
   poster?: string;
+  /**
+   * Images: responsive candidates ("<url> 800w, <url> 1600w"). When set, `MediaFrame` renders a plain <img> with
+   * `srcset`/`sizes`, intrinsic `width`/`height` and lazy loading instead of next/image (which, in a static export
+   * without the optimiser, emits only one URL). `src` stays the largest file (also used by the full-size viewer).
+   */
+  srcSet?: string;
   /** Visible caption under the media. */
   caption?: string;
   /**
@@ -37,6 +43,8 @@ export interface MediaAsset {
   playback?: "ambient" | "controls" | "toggle";
   /** Captions/subtitles file for videos with meaningful speech. */
   captionsTrack?: string;
+  /** The video already shows its captions in the picture: the track is offered but not switched on by default (otherwise they appear twice). */
+  captionsBurnedIn?: boolean;
   /** Images: "contain" shows the whole asset inside the frame (logos, cut-outs) instead of cropping to fill it. */
   fit?: "cover" | "contain";
   /** Placeholder tone so it sits naturally in its section. */

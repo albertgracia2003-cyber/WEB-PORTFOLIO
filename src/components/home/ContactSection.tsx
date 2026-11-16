@@ -7,7 +7,7 @@ export function ContactSection({ asPage = false }: { asPage?: boolean }) {
     <section id="contact" className="section surface-base contact atmos" aria-labelledby="contact-title">
       <div className="container">
         <p className="label" data-reveal>
-          <span className="accent">05</span> — Contact
+          <span className="accent">06</span> — Contact
         </p>
         <Heading id="contact-title" className="contact__title" data-reveal>
           <span className="light">Let&apos;s build</span>

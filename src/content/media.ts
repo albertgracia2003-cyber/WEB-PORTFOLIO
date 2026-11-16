@@ -1,4 +1,4 @@
-import type { MediaAsset } from "@/types/media";
+import type { AspectRatio, MediaAsset } from "@/types/media";
 import { withBase } from "@/lib/base";
 
 /**
@@ -11,6 +11,30 @@ import { withBase } from "@/lib/base";
  * Slots without `src` render a clearly labelled development placeholder.
  */
 const A = withBase("/assets");
+
+/** A render of the retention-insert model: 800 / 1600 px WebP pair in /assets/tiri-insert/images (`srcSet`), width/height of the 1600 file. */
+function tiriImage(
+  name: string,
+  width: number,
+  height: number,
+  aspect: AspectRatio,
+  text: { label: string; alt: string; caption: string },
+): MediaAsset {
+  const base = `${A}/tiri-insert/images/${name}`;
+  return {
+    kind: "image",
+    label: text.label,
+    expected: `${base}-1600.webp`,
+    src: `${base}-1600.webp`,
+    srcSet: `${base}-800.webp 800w, ${base}-1600.webp 1600w`,
+    width,
+    height,
+    aspect,
+    alt: text.alt,
+    caption: text.caption,
+    tone: "light",
+  };
+}
 
 export const media = {
   /* ───────── ORTESIS STUDIO ───────── */
@@ -577,6 +601,85 @@ export const media = {
     aspect: "1 / 1",
     alt: "",
     tone: "warm",
+  },
+
+  /* ───────── THREE-INSTRUMENT RETENTION INSERT (personal CAD / product-design project, digital demonstrator) ─────────
+     Renders and views of the CAD model; light grey backgrounds. Each image has an 800 and a 1600 px WebP (srcSet). */
+  "tiri-hero": tiriImage("tiri-hero-closed", 1600, 1000, "16 / 10", {
+    label: "Retention insert — closed and latched",
+    alt: "Retention insert with three instruments under a latched aluminium bridge, in a dark grey case, seen from above on a light grey surface",
+    caption: "Closed and latched: the finished assembly in the moulded insert, with the orange push tab and lift fins as the only touch points.",
+  }),
+  /** Exploded view, cleaned of its burned-in labels and leader lines (16 Nov 2026, from the labelled drawing Albert supplied at 2184 × 1680): no lines cross. Six markers drawn by `ExplodedFigure` match the six ideas of "How it works" (works, tiri-case.ts). One file, 897 px wide; white background multiplied to the light grey of the other renders. */
+  "tiri-exploded": {
+    kind: "image",
+    label: "Retention insert — exploded view",
+    expected: `${A}/tiri-insert/images/tiri-exploded-clean-897.webp`,
+    src: `${A}/tiri-insert/images/tiri-exploded-clean-897.webp`,
+    width: 897,
+    height: 1360,
+    aspect: "897 / 1360",
+    alt: "Exploded assembly of the retention insert, from top to bottom: the lid, the bridge with its latch pin, three instruments, the insert with its two screws and hinge pins, and the reference tray. Six parts are numbered 1 to 6, matching the list beside the figure.",
+    caption: "Exploded assembly: lid, bridge, instruments, insert and tray. The numbers match the list.",
+    tone: "light",
+  },
+  "tiri-push-tab": tiriImage("tiri-push-tab-detail", 1600, 1000, "16 / 10", {
+    label: "Retention insert — push tab",
+    alt: "Close-up of the orange push tab inside the front-wall sweep of the case",
+    caption: "Push tab inside the front-wall sweep: one touch point, one colour, one gesture.",
+  }),
+  "tiri-moulded-shell": tiriImage("tiri-insert-moulded-shell", 1600, 1000, "16 / 10", {
+    label: "Retention insert — moulded shell, underside",
+    alt: "White injection-moulded insert seen from below: 2.5 mm shell, ribs and bosses",
+    caption: "Underside of the moulded insert: 2.5 mm shell, 1.5 mm ribs, bosses round the locating holes.",
+  }),
+  "tiri-tool-lift": tiriImage("tiri-tool-lift", 1600, 1000, "16 / 10", {
+    label: "Retention insert — bridge open, one instrument lifted",
+    alt: "Bridge open on its stop, one instrument lifted out by its grip",
+    caption: "Bridge open on its 110° stop, one instrument lifted by its grip.",
+  }),
+  "tiri-tilted": tiriImage("tiri-tilted-presentation", 1600, 1000, "16 / 10", {
+    label: "Retention insert — case tilted 15°",
+    alt: "Case tilted 15° on two fold-out feet with the bridge open",
+    caption: "Case tilted 15° on fold-out feet: the back edge rises about 32 mm and every finger angle drops by 15°.",
+  }),
+  "tiri-lift-fin": tiriImage("tiri-bridge-lift-fin", 1600, 1000, "16 / 10", {
+    label: "Retention insert — lift fin on the bridge",
+    alt: "Lens-shaped lift fin on the bridge rib",
+    caption: "Lens-shaped lift fin on the bridge rib.",
+  }),
+  "tiri-finger-room": tiriImage("tiri-finger-room-plan", 1600, 1000, "16 / 10", {
+    label: "Retention insert — plan view, finger room",
+    alt: "Plan view with Ø16 finger proxies and the 2.2 mm clearance marked",
+    caption: "Plan view with the Ø16 finger proxy beside each grip: 2.2 mm to the neighbouring instrument. The circles are a check, not a hand model.",
+  }),
+  "tiri-drawing-insert": tiriImage("tiri-drawing-insert", 1600, 1132, "1600 / 1132", {
+    label: "Retention insert — dimensioned drawing, insert (A2)",
+    alt: "Dimensioned drawing sheet of the insert (A2)",
+    caption: "Dimensioned drawing of the insert (A2), with datums, tolerances and notes.",
+  }),
+  "tiri-drawing-bridge": tiriImage("tiri-drawing-bridge", 1600, 1131, "1600 / 1131", {
+    label: "Retention insert — dimensioned drawing, bridge (A3)",
+    alt: "Dimensioned drawing sheet of the bridge (A3)",
+    caption: "Dimensioned drawing of the bridge (A3), with datums, tolerances and notes.",
+  }),
+  /** "Use, simulated": 32 s, 1280 × 720, H.264, captions burned into the picture (the .vtt is offered as a track, off by default). One click anywhere on the frame plays / pauses it. */
+  "tiri-use-simulation": {
+    kind: "video",
+    label: "Use, simulated",
+    expected: `${A}/tiri-insert/video/tiri-use-simulation.mp4`,
+    src: `${A}/tiri-insert/video/tiri-use-simulation.mp4`,
+    poster: `${A}/tiri-insert/video/tiri-use-simulation-poster.webp`,
+    captionsTrack: `${A}/tiri-insert/video/tiri-use-simulation.vtt`,
+    captionsBurnedIn: true,
+    aspect: "16 / 9",
+    width: 1280,
+    height: 720,
+    alt: "Animated use of the CAD model, 32 seconds, with captions: the push tab is pressed, the bridge swings up and rests on its stop, one instrument is lifted out, and the bridge is lowered and latches again.",
+    caption:
+      "Animated use of the CAD model: press the tab, swing the bridge up, lift one instrument, close. A geometric simulation, not a physical test. The steel rule, pen and disc are there for scale.",
+    playback: "toggle",
+    tone: "light",
   },
 
   /* ───────── SUPPORTING ───────── */

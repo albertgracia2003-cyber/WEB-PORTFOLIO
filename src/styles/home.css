@@ -1010,20 +1010,60 @@
   border-radius: calc(var(--radius-stage) - 6px);
 }
 
-/* Handlebar: constrained study aligned to the section's left edge — intro, two aligned columns, footnote */
+/* MotoSpirit and AED Monitoring (section 04) share one panel: raised surface, hairline border, terracotta left edge (Albert, 15 Nov 2026). Handlebar, TIRI and the Bar Stool stay open. */
+.mx-list {
+  --panel-pad: clamp(1.25rem, 3vw, 2.5rem);
+}
+
+.mx--moto,
+.mx--aed {
+  padding: var(--panel-pad);
+  border-radius: var(--radius-stage);
+  background: color-mix(in srgb, var(--color-surface-elevated) 70%, transparent);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--color-accent);
+}
+
+.mx--aed .media-frame__caption .label {
+  white-space: nowrap;
+}
+
+/* Section 04: the two cards are exactly as tall as each other (rows share the tallest one's height) on wide screens; stacked, as before. */
+.uni-cards {
+  display: grid;
+  gap: clamp(5rem, 10vw, 9rem);
+}
+
+@media (min-width: 900px) {
+  .uni-cards {
+    grid-auto-rows: 1fr;
+  }
+}
+
+/* Handlebar (last entry of section 04): full container width (no fixed cap), same 12-column lines as the other open entry (Bar Stool) above it — intro, two aligned columns, footnote */
 .mx--hb {
   display: grid;
   gap: var(--s-6);
-  width: min(100%, 72rem);
+  width: 100%;
   margin-inline: 0;
   padding-top: var(--s-6);
   border-top: 1px solid var(--line);
 }
 
+/* In section 04 the Handlebar takes the same inner inset as the Bar Stool above it (the cards' inner edge), so open entries line up with the card content; its hairline keeps the full container width. */
+@media (min-width: 900px) {
+  .mx--hb {
+    padding-inline: calc(var(--panel-pad) + 3px) calc(var(--panel-pad) + 1px);
+  }
+}
+
 .hb__intro {
+  grid-column: 9 / -1;
+  grid-row: 1;
+  align-self: start;
   display: grid;
   gap: var(--s-3);
-  max-width: 46rem;
+  min-width: 0;
 }
 
 .hb__title {
@@ -1042,9 +1082,22 @@
 
 .hb__cols {
   display: grid;
-  grid-template-columns: minmax(0, 62fr) minmax(0, 38fr);
-  gap: var(--s-6) var(--s-6);
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--col-gap);
+  row-gap: var(--s-6);
   align-items: start;
+}
+
+.hb__col:first-of-type {
+  grid-column: 1 / span 7;
+  grid-row: 1 / span 2;
+}
+
+/* the finite element study sits under the introduction, its bottom level with the model's caption: no hole in the right column */
+.hb__col:last-of-type {
+  grid-column: 9 / -1;
+  grid-row: 2;
+  align-self: end;
 }
 
 .hb__col {
@@ -1062,7 +1115,7 @@
   padding: 0;
 }
 
-.hb__col:first-child .media-frame__img--contain {
+.hb__col:first-of-type .media-frame__img--contain {
   padding: 2%;
 }
 
@@ -1093,11 +1146,6 @@
   column-gap: var(--col-gap);
   row-gap: var(--s-5);
   align-items: center;
-  padding: clamp(1.25rem, 3vw, 2.5rem);
-  border-radius: var(--radius-stage);
-  background: color-mix(in srgb, var(--color-surface-elevated) 70%, transparent);
-  border: 1px solid var(--line);
-  border-left: 3px solid var(--color-accent);
 }
 
 .moto__logo {
@@ -1149,12 +1197,10 @@
   column-gap: var(--col-gap);
   row-gap: var(--s-4);
   align-items: center;
-  padding-top: var(--s-6);
-  border-top: 1px solid var(--line);
 }
 
 .aed__media {
-  grid-column: 1 / span 4;
+  grid-column: 1 / span 5;
 }
 
 .aed__body {
@@ -1164,12 +1210,55 @@
   justify-items: start;
 }
 
+/*
+ * AED Monitoring takes MotoSpirit's height (Albert, 16 Nov 2026): the text runs the full width of its column, and on wide screens the
+ * picture is no longer tied to its 4:3 shape — it fills whatever height the row has (the caption stays under it), cropped to fit.
+ */
+.aed__body .lead,
+.aed__body .prose {
+  max-width: none;
+}
+
+@media (min-width: 900px) {
+  .mx--aed {
+    align-items: stretch;
+  }
+  .aed__body {
+    align-self: center;
+  }
+  .aed__media {
+    display: flex;
+  }
+  .aed__media .media-frame {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+  .aed__media .media-frame__box {
+    flex: 1 1 0;
+    min-height: 9rem;
+    aspect-ratio: auto !important;
+  }
+}
+
+/* Same breakpoint as the TIRI card above it, so both entries keep identical column lines (media 1–7, text 8–12 below 1100px). */
 @media (max-width: 1099px) {
+  .hb__intro,
+  .hb__col:last-of-type {
+    grid-column: 8 / -1;
+  }
 }
 
 @media (max-width: 719px) {
   .hb__cols {
     grid-template-columns: 1fr;
+  }
+  .hb__intro,
+  .hb__col:first-of-type,
+  .hb__col:last-of-type {
+    grid-column: 1 / -1;
+    grid-row: auto;
+    align-self: start;
   }
 }
 
@@ -1189,11 +1278,7 @@
   }
 }
 
-/* Bar stool: standalone closing project after Computational Design */
-.chair-home__kicker {
-  margin-bottom: var(--s-8);
-}
-
+/* Bar stool: third entry of section 04 (University projects), open layout (no card) */
 .chair-home__grid {
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
@@ -1205,13 +1290,41 @@
 .chair-home__photo {
   grid-column: 1 / span 5;
   display: block;
+  align-self: start;
+}
+
+/* Same column lines as the two cards above it (media 1–5, text 6–12): on wide screens the Bar Stool gets the cards' inner inset, so its photo and text line up with theirs. */
+@media (min-width: 900px) {
+  .chair-home__grid {
+    padding-left: calc(var(--panel-pad) + 3px);
+    padding-right: calc(var(--panel-pad) + 1px);
+  }
 }
 
 .chair-home__body {
-  grid-column: 7 / span 5;
+  grid-column: 6 / span 7;
+  display: grid;
+  gap: var(--s-6);
+  align-content: space-between; /* text at the top, sketch and link at the bottom, level with the photograph: no hole beside the sketch */
+  align-self: stretch;
+  justify-items: start;
+}
+
+.chair-home__text {
   display: grid;
   gap: var(--s-4);
   justify-items: start;
+}
+
+.chair-home__more {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--s-5) var(--s-7);
+}
+
+.chair-home__more .media-frame__caption .label {
+  white-space: nowrap;
 }
 
 .chair-home__title {
@@ -1222,15 +1335,6 @@
   text-wrap: balance;
 }
 
-@media (max-width: 1099px) {
-  .chair-home__photo {
-    grid-column: 1 / span 6;
-  }
-  .chair-home__body {
-    grid-column: 8 / span 5;
-  }
-}
-
 @media (max-width: 899px) {
   .chair-home__photo,
   .chair-home__body {
@@ -1239,8 +1343,8 @@
   .chair-home__photo {
     max-width: 36rem;
   }
-  .chair-home__kicker {
-    margin-bottom: var(--s-6);
+  .chair-home__body {
+    align-self: start;
   }
 }
 

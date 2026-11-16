@@ -248,7 +248,7 @@
   scale: 0.92;
 }
 
-/* ---------- Compact navigation (below 1100px): Menu button + vertical list ---------- */
+/* ---------- Compact navigation (below 1150px): Menu button + vertical list (six links no longer fit on one row with the logo below that width) ---------- */
 
 .site-header__toggle {
   display: none;
@@ -287,7 +287,7 @@
   transform: translateY(-3.25px) rotate(-45deg);
 }
 
-@media (max-width: 1099px) {
+@media (max-width: 1149px) {
   .site-header__toggle {
     display: inline-flex;
   }

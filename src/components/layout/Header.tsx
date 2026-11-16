@@ -93,7 +93,7 @@ export function Header() {
     const onFocusIn = (e: FocusEvent) => {
       if (!headerRef.current?.contains(e.target as Node)) close(false);
     };
-    const mq = window.matchMedia("(min-width: 1100px)");
+    const mq = window.matchMedia("(min-width: 1150px)");
     const onWide = () => mq.matches && close(false);
     document.addEventListener("keydown", onKey);
     document.addEventListener("pointerdown", onPointer);
