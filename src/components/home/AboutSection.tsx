@@ -9,7 +9,7 @@ export function AboutSection() {
     <section id="about" className="section surface-deep about-home atmos atmos--ember" aria-labelledby="about-title">
       <div className="container">
         <p className="label" data-reveal>
-          <span className="accent">04</span> — About · Engineering approach
+          <span className="accent">05</span> — About · Engineering approach
         </p>
         <div className="about-home__grid">
           <h2 id="about-title" className="about-home__statement" data-reveal style={rd(80)}>

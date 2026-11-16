@@ -88,6 +88,23 @@ const projects: readonly Project[] = [
     order: 1,
   },
   {
+    slug: "tiri-insert",
+    href: "/work/tiri-insert",
+    title: "Three-Instrument Retention Insert",
+    subtitle: "A keyed, lift-out insert that holds three instruments under one latched bridge.",
+    summary:
+      "A keyed, lift-out insert for a 200 × 120 × 35 mm instrument case. Three mock instruments sit in vee saddles under one rigid, hinged aluminium bridge. A single 4 mm press on a push tab releases the latch, and any one instrument lifts out by its grip.",
+    category: "physical",
+    authorship: { kind: "personal", note: "Personal CAD and product-design project" },
+    maturity: "digital-demonstrator",
+    disciplines: ["Parametric CAD", "Tolerance stack-up", "Design for injection moulding", "Product design"],
+    tools: ["FreeCAD"],
+    cover: "tiri-hero",
+    related: ["chair-design", "ortesis-studio"],
+    publication: "published",
+    order: 0,
+  },
+  {
     slug: "handlebar",
     title: "Bicycle Handlebar — CAD & Structural Study",
     subtitle: "A university project on handlebar cross-section sizing.",
@@ -176,6 +193,7 @@ export const maturityLabel: Record<Maturity, string> = {
   "functional-prototype": "Functional experimental prototype",
   "working-system": "Working procedural system",
   "built-object": "Built physical object",
+  "digital-demonstrator": "Digital demonstrator",
   concept: "University project",
   planned: "Planned",
 };
@@ -196,8 +214,8 @@ export function getProject(slug: string): Project {
   return p;
 }
 
-/** Case-study reading order for "next project": homepage order (01 ORTESIS, 03 Computational, then the Bar Stool that closes the page before About), detail pages only. */
-export const caseStudyOrder = ["ortesis-studio", "procedural-city", "parametric-drawer", "chair-design"] as const;
+/** Case-study reading order for "next project": homepage order (01 ORTESIS, the Retention Insert that leads 02, 03 Computational, then the Bar Stool that closes the page before About), detail pages only. */
+export const caseStudyOrder = ["ortesis-studio", "tiri-insert", "procedural-city", "parametric-drawer", "chair-design"] as const;
 
 export function nextCaseStudy(slug: string): Project {
   const i = caseStudyOrder.indexOf(slug as (typeof caseStudyOrder)[number]);

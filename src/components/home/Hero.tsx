@@ -33,7 +33,7 @@ export function Hero() {
             Exploring CAD, mechanical design, and physical product development through prototyping and computational tools.
           </p>
           <ol className="hero__index" aria-label="Portfolio sections">
-            {primaryNav.slice(0, 4).map((item, i) => (
+            {primaryNav.slice(0, 5).map((item, i) => (
               <li key={item.id}>
                 <a href={`#${item.id}`} className="hero__index-link">
                   <span className="hero__index-num">{pad(i + 1)}</span>

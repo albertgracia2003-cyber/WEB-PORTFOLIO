@@ -164,7 +164,9 @@ export function VideoMedia({ asset }: { asset: MediaAsset }) {
       >
         {near && asset.srcWebm ? <source src={asset.srcWebm} type="video/webm" /> : null}
         {near ? <source src={asset.src} type="video/mp4" /> : null}
-        {asset.captionsTrack ? <track kind="captions" src={asset.captionsTrack} srcLang="en" default /> : null}
+        {asset.captionsTrack ? (
+          <track kind="captions" src={asset.captionsTrack} srcLang="en" label="English" default={!asset.captionsBurnedIn} />
+        ) : null}
       </video>
       {toggleMode ? (
         <button

@@ -9,7 +9,7 @@ export function AedEntry() {
   return (
     <article className="mx mx--aed" aria-labelledby="aed-title">
       <div className="aed__media">
-        <MediaFrame id={p.cover} fig="02.5" sizes="(min-width: 960px) 28vw, 100vw" reveal={false} />
+        <MediaFrame id={p.cover} fig="04.2" sizes="(min-width: 960px) 28vw, 100vw" position="50% 30%" reveal={false} />
       </div>
       <div className="aed__body">
         <p className="label">{collab?.context ?? "University team project"}</p>

@@ -10,7 +10,7 @@ export function MotoSpiritEntry() {
   return (
     <article className="mx mx--moto" aria-labelledby="motospirit-title">
       <div className="moto__logo">
-        <MediaFrame id={p.cover} fig="02.3" sizes="(min-width: 960px) 28vw, 80vw" reveal={false} showCaption={false} />
+        <MediaFrame id={p.cover} fig="04.1" sizes="(min-width: 960px) 28vw, 80vw" reveal={false} showCaption={false} />
       </div>
       <div className="moto__body">
         <p className="label">{collab?.context ?? "University team project"}</p>

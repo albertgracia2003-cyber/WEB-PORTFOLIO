@@ -1,0 +1,542 @@
+/* ==========================================================================
+   THREE-INSTRUMENT RETENTION INSERT — homepage card (section 02) and /work/tiri-insert.
+   Tokens only (both themes). The renders have a light grey background: on the dark theme they sit as light rounded images, like the Bar Stool photograph.
+   ========================================================================== */
+
+/* ---------- Homepage card (first entry of section 02) ----------- */
+
+.mx--tiri {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--col-gap);
+  row-gap: var(--s-5);
+  align-items: center;
+}
+
+.tiri-card__photo {
+  grid-column: 1 / span 7;
+  display: block;
+  min-width: 0;
+}
+
+.tiri-card__photo .media-frame__box {
+  box-shadow: 0 50px 90px -64px var(--color-shadow-strong);
+}
+
+.tiri-card__body {
+  grid-column: 9 / -1;
+  display: grid;
+  gap: var(--s-4);
+  justify-items: start;
+  min-width: 0;
+}
+
+.tiri-card__body > .label {
+  color: var(--accent-text);
+}
+
+.tiri-card__title {
+  text-wrap: balance;
+}
+
+.tiri-card__text {
+  max-width: 42ch;
+  color: var(--fg-muted);
+  text-wrap: pretty;
+}
+
+.tiri-card__video {
+  margin: 0;
+  width: min(100%, 22rem);
+  display: grid;
+  gap: var(--s-2);
+}
+
+.tiri-card__video .media-frame__box {
+  border-radius: var(--radius-2);
+}
+
+
+@media (max-width: 1099px) {
+  .tiri-card__photo {
+    grid-column: 1 / span 7;
+  }
+  .tiri-card__body {
+    grid-column: 8 / -1;
+  }
+}
+
+@media (max-width: 899px) {
+  .tiri-card__photo,
+  .tiri-card__body {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ---------- Project page: shared ------------------------------------ */
+
+.tiri {
+  position: relative;
+  background: var(--bg);
+  color: var(--fg);
+}
+
+.tiri-sec {
+  padding-block: clamp(3rem, 6vw, 5.5rem);
+}
+
+.tiri-sec__head {
+  display: grid;
+  gap: var(--s-3);
+  margin-bottom: var(--s-6);
+}
+
+.tiri-h2 {
+  font-size: var(--fs-h2);
+  line-height: var(--lh-head);
+  letter-spacing: var(--ls-head);
+  font-weight: var(--fw-semibold);
+  text-wrap: balance;
+}
+
+.tiri .media-frame__box {
+  box-shadow: 0 40px 80px -60px var(--color-shadow-strong);
+}
+
+/* "Fig. 3" stays on one line */
+.tiri .media-frame__caption .label,
+.mx--tiri .media-frame__caption .label {
+  white-space: nowrap;
+}
+
+/* Small figures: the "Enlarge" pill shrinks to its icon so it never covers the lettering inside a drawing (the button keeps its accessible name). */
+.tiri-grid .zoom__hint {
+  right: var(--s-2);
+  top: var(--s-2);
+  padding: 0.35rem;
+  gap: 0;
+  font-size: 0;
+}
+
+/* ---------- Opening -------------------------------------------------- */
+
+.tiri-hero {
+  position: relative;
+  isolation: isolate;
+  padding-top: calc(var(--header-h) + clamp(2rem, 5vw, 4rem));
+}
+
+.tiri-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(40% 50% at 82% 28%, var(--color-glow-accent), transparent 70%),
+    radial-gradient(50% 50% at 8% 8%, var(--color-glow-pearl), transparent 70%);
+}
+
+.tiri-hero__stage {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--col-gap);
+  row-gap: var(--s-6);
+  align-items: center;
+  margin-top: clamp(1.5rem, 4vw, 3rem);
+}
+
+.tiri-hero__photo {
+  grid-column: 1 / span 7;
+  min-width: 0;
+}
+
+.tiri-hero__panel {
+  grid-column: 8 / -1;
+  display: grid;
+  gap: var(--s-4);
+  justify-items: start;
+  min-width: 0;
+}
+
+.tiri-hero__panel > .label {
+  color: var(--accent-text);
+}
+
+.tiri-hero__title {
+  font-size: clamp(2.1rem, 3.7vw, 3.7rem);
+  font-weight: var(--fw-semibold);
+  letter-spacing: -0.05em;
+  line-height: 0.98;
+  text-wrap: balance;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .tiri-hero__title {
+    animation: title-in 1400ms var(--ease-emph) both;
+  }
+}
+
+.tiri-hero__subtitle {
+  max-width: 24ch;
+  font-size: var(--fs-lead);
+  line-height: 1.4;
+  letter-spacing: -0.012em;
+  color: var(--fg-muted);
+  text-wrap: pretty;
+}
+
+@media (max-width: 1099px) {
+  .tiri-hero__photo {
+    grid-column: 1 / span 7;
+  }
+  .tiri-hero__panel {
+    grid-column: 8 / -1;
+  }
+}
+
+@media (max-width: 899px) {
+  .tiri-hero__photo,
+  .tiri-hero__panel {
+    grid-column: 1 / -1;
+  }
+  .tiri-hero__panel {
+    grid-row: 1;
+  }
+}
+
+/* ---------- Brief ----------------------------------------------------- */
+
+.tiri-brief__grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--col-gap);
+  row-gap: var(--s-6);
+  align-items: start;
+}
+
+.tiri-brief__problem {
+  grid-column: 1 / span 7;
+  display: grid;
+  gap: var(--s-4);
+  min-width: 0;
+}
+
+.tiri-did {
+  grid-column: 9 / -1;
+  display: grid;
+  gap: var(--s-3);
+  padding: var(--s-5);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius-2);
+  background: color-mix(in srgb, var(--color-surface-elevated) 70%, transparent);
+  color: var(--fg-muted);
+  font-size: var(--fs-small);
+  line-height: 1.6;
+  min-width: 0;
+}
+
+.tiri-did p:not(.label) {
+  color: var(--fg);
+  font-size: var(--fs-body);
+  line-height: 1.55;
+}
+
+@media (max-width: 899px) {
+  .tiri-brief__problem,
+  .tiri-did {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ---------- How it works: the video first (centred), then the numbered exploded view beside the six ideas, then the parts ---------- */
+
+.tiri-works__video {
+  display: grid;
+  gap: var(--s-4);
+  justify-items: center;
+  width: min(100%, 56rem);
+  margin: 0 auto var(--s-9);
+  text-align: center;
+}
+
+.tiri-works__video .media-frame {
+  width: 100%;
+}
+
+.tiri-works__video .media-frame__box {
+  background: var(--color-surface);
+}
+
+.tiri-works__video figcaption {
+  display: grid;
+  gap: var(--s-2);
+  max-width: 44ch;
+  color: var(--fg-muted);
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+.tiri-works__grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--col-gap);
+  row-gap: var(--s-7);
+  align-items: stretch;
+}
+
+.tiri-works__fig {
+  grid-column: 1 / span 5;
+  grid-row: 1;
+  min-width: 0;
+  /* when the six ideas run longer than the figure (narrower screens) the figure stays beside them */
+  align-self: start;
+  position: sticky;
+  top: calc(var(--header-h) + var(--s-5));
+}
+
+.tiri-works__list {
+  grid-column: 7 / -1;
+  grid-row: 1;
+  display: grid;
+  grid-auto-rows: 1fr; /* the six ideas share the height of the figure: no hole under the list */
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  min-width: 0;
+}
+
+.tiri-works__item {
+  display: grid;
+  grid-template-columns: 1.5rem minmax(0, 1fr);
+  gap: var(--s-4);
+  align-content: center;
+  padding-block: var(--s-4);
+  border-top: 1px solid var(--line);
+  color: var(--fg-muted);
+  line-height: 1.55;
+}
+
+.tiri-works__item:last-child {
+  border-bottom: 1px solid var(--line);
+}
+
+/* the same numbered circle as the markers on the figure */
+.tiri-works__n {
+  display: grid;
+  place-items: center;
+  width: 1.5rem;
+  aspect-ratio: 1;
+  margin-top: 0.125rem;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--color-on-accent);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: var(--fw-semibold);
+  line-height: 1;
+}
+
+.tiri-works__title {
+  margin-bottom: var(--s-1);
+  font-size: 1.0625rem;
+  font-weight: var(--fw-semibold);
+  letter-spacing: -0.015em;
+  color: var(--fg);
+}
+
+/* the exploded view + its numbered markers */
+.tiri-exploded {
+  margin: 0;
+  display: grid;
+  gap: var(--s-3);
+  align-content: start;
+}
+
+.tiri-exploded__stage {
+  position: relative;
+  container-type: inline-size;
+}
+
+.tiri-exploded__marks {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  pointer-events: none;
+}
+
+.tiri-exploded__marks li {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: clamp(1.25rem, 5cqw, 1.75rem);
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 2px var(--paper);
+  color: var(--color-on-accent);
+  font-family: var(--font-mono);
+  font-size: clamp(0.6875rem, 2.7cqw, 0.875rem);
+  font-weight: var(--fw-semibold);
+  line-height: 1;
+}
+
+@media (max-width: 899px) {
+  .tiri-works__video {
+    margin-bottom: var(--s-8);
+  }
+  .tiri-works__fig,
+  .tiri-works__list {
+    grid-column: 1 / -1;
+    grid-row: auto;
+  }
+  .tiri-works__fig {
+    max-width: 30rem;
+    position: static;
+  }
+}
+
+/* ---------- Details: the figure grid ------------------------------------ */
+
+/*
+ * "Views from the model": a hierarchy, not six equal tiles. The two priority-A images (Fig. 3, Fig. 7) span 8 of 12 columns; the four priority-B
+ * images keep the 4-column size they had. Same 12-column grid as the rest of the page (Albert, 15 Nov 2026).
+ */
+.tiri-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--s-7) var(--col-gap);
+  align-items: start;
+}
+
+.tiri-grid__item {
+  min-width: 0;
+}
+
+@media (min-width: 900px) {
+  .tiri-grid__item--tab { grid-column: 1 / span 8; grid-row: 1 / span 2; }
+  .tiri-grid__item--fin { grid-column: 9 / span 4; grid-row: 1; }
+  .tiri-grid__item--lift { grid-column: 9 / span 4; grid-row: 2; }
+  .tiri-grid__item--tilt { grid-column: 1 / span 4; grid-row: 3; }
+  .tiri-grid__item--shell { grid-column: 5 / span 8; grid-row: 3 / span 2; }
+  .tiri-grid__item--room { grid-column: 1 / span 4; grid-row: 4; }
+}
+
+@media (max-width: 899px) {
+  .tiri-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    grid-auto-flow: dense;
+  }
+  .tiri-grid__item--lg { grid-column: 1 / -1; }
+  .tiri-grid__item--sm { grid-column: span 3; }
+}
+
+@media (max-width: 559px) {
+  .tiri-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s-6);
+  }
+  .tiri-grid__item--lg,
+  .tiri-grid__item--sm { grid-column: 1 / -1; }
+}
+
+/* ---------- Checked on the model: numbers ------------------------------ */
+
+.tiri-checks__grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--s-5) var(--col-gap);
+  align-items: end;
+}
+
+.tiri-checks__head {
+  grid-column: 1 / span 5;
+  display: grid;
+  gap: var(--s-3);
+  align-content: end;
+}
+
+.tiri-checks__head .tiri-h2 {
+  margin: 0;
+}
+
+.tiri-numbers {
+  grid-column: 7 / -1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 0;
+  border-top: 1px solid var(--line-strong);
+  border-bottom: 1px solid var(--line);
+}
+
+@media (max-width: 899px) {
+  .tiri-checks__head,
+  .tiri-numbers {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 479px) {
+  .tiri-numbers {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.tiri-numbers__cell {
+  display: grid;
+  align-content: start;
+  gap: var(--s-3);
+  min-width: 0;
+  padding: var(--s-5) var(--s-5) var(--s-5) 0;
+}
+
+.tiri-numbers__cell dd {
+  display: grid;
+  gap: var(--s-1);
+  margin: 0;
+}
+
+.tiri-numbers__value {
+  font-size: clamp(1.4rem, 1.95vw, 1.9rem);
+  font-weight: var(--fw-semibold);
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+}
+
+.tiri-numbers__note {
+  font-size: var(--fs-small);
+  line-height: 1.45;
+  color: var(--fg-muted);
+}
+
+/* ---------- What went wrong · limits · next ----------------------------- */
+
+.tiri-limits {
+  background: var(--bg);
+}
+
+.tiri-limits__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--s-6) var(--s-7);
+}
+
+.tiri-limits__grid > div {
+  display: grid;
+  gap: var(--s-3);
+  align-content: start;
+  min-width: 0;
+  padding-top: var(--s-4);
+  border-top: 1px solid var(--line-strong);
+  color: var(--fg-muted);
+  line-height: 1.6;
+}
+
+@media (max-width: 899px) {
+  .tiri-limits__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
